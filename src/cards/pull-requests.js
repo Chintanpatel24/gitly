@@ -4,7 +4,7 @@ import { Card } from "../common/Card.js";
 import { getCardColors } from "../common/color.js";
 
 const CARD_MIN_WIDTH = 300;
-const CARD_DEFAULT_WIDTH = 400;
+const CARD_DEFAULT_WIDTH = 620;
 
 /**
  * Render pull requests card.
@@ -49,11 +49,8 @@ export const renderPRCard = (prData, options = {}) => {
 
   const width = Math.max(card_width, CARD_MIN_WIDTH);
 
-  // Calculate height dynamically based on number of repositories
-  const repoCount = Object.keys(prData.prsByRepository).length;
-  const baseHeight = 120;
-  const perRepoHeight = 40;
-  const height = baseHeight + Math.min(repoCount, 8) * perRepoHeight;
+  const repoRows = Math.min(Object.keys(prData.prsByRepository).length, 6);
+  const height = 190 + repoRows * 28;
 
   const card = new Card({
     width,
@@ -69,52 +66,58 @@ export const renderPRCard = (prData, options = {}) => {
     card.disableAnimations();
   }
 
-  // Create PR content
-  let contentY = 60;
-  let prContent = `
-    <text
-      x="25"
-      y="${contentY}"
-      class="header"
-      data-testid="header"
-      style="font-size: 14px; font-weight: 600;"
-    >
-      Total Pull Requests: ${prData.totalCount}
-    </text>
-  `;
+  const allPrs = Object.values(prData.prsByRepository).flat();
+  const mergedCount = allPrs.filter((pr) => pr.merged).length;
+  const openCount = allPrs.filter((pr) => pr.state === "open").length;
+  const closedCount = prData.totalCount - openCount;
+  const repoCount = Object.keys(prData.prsByRepository).length;
 
-  contentY += 30;
+  const repos = Object.entries(prData.prsByRepository)
+    .map(([repoName, prs]) => ({
+      repoName,
+      shortName: repoName.split("/")[1] || repoName,
+      count: prs.length,
+    }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 6);
 
-  // List repositories with PR counts
-  const repos = Object.entries(prData.prsByRepository).slice(0, 8);
-  repos.forEach(([repoName, prs]) => {
-    const prCount = prs.length;
-    const repoLabel = repoName.split("/")[1] || repoName;
-    const pluralSuffix = prCount === 1 ? "" : "s";
+  const maxRepoCount = repos.length ? repos[0].count : 1;
+  const barStartX = 220;
+  const barMaxWidth = width - barStartX - 85;
+  let graphY = 174;
 
-    prContent += `
+  let graphSvg = "";
+  repos.forEach((repo, index) => {
+    const barWidth = Math.max(6, Math.round((repo.count / maxRepoCount) * barMaxWidth));
+    const delay = 300 + index * 90;
+    graphSvg += `
       <g>
         <text
           x="25"
-          y="${contentY}"
-          class="stat-label"
-          style="font-size: 12px; fill: ${colors.textColor};"
+          y="${graphY + 10}"
+          style="font-size: 11px; fill: ${colors.textColor};"
         >
-          ${repoLabel}
+          ${repo.shortName}
         </text>
+        <rect
+          x="${barStartX}"
+          y="${graphY}"
+          width="${barWidth}"
+          height="14"
+          rx="7"
+          class="graph-bar"
+          style="fill: ${colors.titleColor}; animation-delay: ${delay}ms;"
+        />
         <text
-          x="${width - 25}"
-          y="${contentY}"
-          class="stat-value"
-          text-anchor="end"
-          style="font-size: 12px; font-weight: 600; fill: ${colors.titleColor};"
+          x="${barStartX + barWidth + 8}"
+          y="${graphY + 11}"
+          style="font-size: 11px; font-weight: 600; fill: ${colors.textColor};"
         >
-          ${prCount} PR${pluralSuffix}
+          ${repo.count}
         </text>
       </g>
     `;
-
-    contentY += 35;
+    graphY += 24;
   });
 
   const animationCSS = `
@@ -129,18 +132,33 @@ export const renderPRCard = (prData, options = {}) => {
       }
     }
 
+    @keyframes expandBar {
+      from {
+        width: 0;
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
     .header,
-    .stat-label,
-    .stat-value {
+    .meta-number,
+    .meta-label {
       animation: slideInUp 0.3s ease-out forwards;
     }
 
-    .stat-label {
+    .meta-label {
       animation-delay: 0.1s;
     }
 
-    .stat-value {
+    .meta-number {
       animation-delay: 0.15s;
+    }
+
+    .graph-bar {
+      transform-origin: left center;
+      animation: expandBar 0.45s ease-out forwards;
     }
   `;
 
@@ -170,7 +188,7 @@ export const renderPRCard = (prData, options = {}) => {
       <g>
         <text
           x="25"
-          y="35"
+          y="34"
           class="header"
           style="font-size: 18px; font-weight: 700; fill: ${colors.titleColor};"
         >
@@ -178,8 +196,33 @@ export const renderPRCard = (prData, options = {}) => {
         </text>
       </g>
 
-      <!-- Content -->
-      ${prContent}
+      <text x="25" y="56" style="font-size: 12px; fill: ${colors.textColor}; opacity: 0.75;">
+        Graph + Numbers (Top repositories by PR count)
+      </text>
+
+      <g>
+        <rect x="25" y="72" width="130" height="72" rx="10" fill="${colors.titleColor}" fill-opacity="0.12" />
+        <text x="40" y="94" class="meta-label" style="font-size: 11px; fill: ${colors.textColor};">Total PRs</text>
+        <text x="40" y="122" class="meta-number" style="font-size: 26px; font-weight: 700; fill: ${colors.titleColor};">${prData.totalCount}</text>
+      </g>
+
+      <g>
+        <text x="178" y="92" class="meta-label" style="font-size: 11px; fill: ${colors.textColor};">Merged</text>
+        <text x="178" y="110" class="meta-number" style="font-size: 15px; font-weight: 700; fill: #3fb950;">${mergedCount}</text>
+
+        <text x="252" y="92" class="meta-label" style="font-size: 11px; fill: ${colors.textColor};">Open</text>
+        <text x="252" y="110" class="meta-number" style="font-size: 15px; font-weight: 700; fill: #58a6ff;">${openCount}</text>
+
+        <text x="317" y="92" class="meta-label" style="font-size: 11px; fill: ${colors.textColor};">Closed</text>
+        <text x="317" y="110" class="meta-number" style="font-size: 15px; font-weight: 700; fill: ${colors.textColor};">${closedCount}</text>
+
+        <text x="392" y="92" class="meta-label" style="font-size: 11px; fill: ${colors.textColor};">Repositories</text>
+        <text x="392" y="110" class="meta-number" style="font-size: 15px; font-weight: 700; fill: ${colors.textColor};">${repoCount}</text>
+      </g>
+
+      <text x="25" y="160" style="font-size: 12px; font-weight: 600; fill: ${colors.titleColor};">Top Repositories</text>
+
+      ${graphSvg}
     </svg>
   `;
 

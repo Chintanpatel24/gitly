@@ -5,6 +5,7 @@ import { getCardColors } from "../common/color.js";
 
 const CARD_MIN_WIDTH = 300;
 const CARD_DEFAULT_WIDTH = 850;
+const DAYS_TO_SHOW = 140;
 
 /**
  * Get green color intensity based on contribution count.
@@ -49,7 +50,7 @@ function getContributionColor(count, maxCount) {
  * Render contributions card with daily contribution numbers.
  *
  * @param {object} contribData Contributions data.
- * @param {Array} contribData.contributions Array of daily contributions.
+ * @param {Array<{date: string, count: number}>} contribData.contributions Array of daily contributions.
  * @param {number} contribData.maxCount Maximum contributions in a day.
  * @param {number} contribData.totalContributions Total contributions.
  * @param {object} options Card options.
@@ -88,7 +89,7 @@ export const renderContributionsCard = (contribData, options = {}) => {
   });
 
   const width = Math.max(card_width, CARD_MIN_WIDTH);
-  const height = 220;
+  const height = 320;
 
   const card = new Card({
     width,
@@ -106,21 +107,21 @@ export const renderContributionsCard = (contribData, options = {}) => {
 
   const { contributions, maxCount, totalContributions } = contribData;
 
-  // Calculate grid layout for contribution squares
-  const squareSize = 12;
-  const squareSpacing = 2;
-  const weeksToShow = 52;
+  // Show recent days with larger numeric cells for readability.
+  const squareSize = 20;
+  const squareSpacing = 4;
+  const weeksToShow = Math.ceil(DAYS_TO_SHOW / 7);
 
   let contributionSVG = ``;
 
-  // Create 52-week grid (7 days per week)
+  // Create recent weeks grid (7 days per week)
   let xPos = 25;
-  let yPos = 80;
+  let yPos = 88;
   let dayOfWeek = 0;
   let weekIndex = 0;
 
   for (
-    let i = Math.max(0, contributions.length - 365);
+    let i = Math.max(0, contributions.length - DAYS_TO_SHOW);
     i < contributions.length;
     i++
   ) {
@@ -147,11 +148,11 @@ export const renderContributionsCard = (contribData, options = {}) => {
         <title>${tooltipText}</title>
         <text
           x="${xPos + squareSize / 2}"
-          y="${yPos + squareSize / 2 + 3}"
+          y="${yPos + squareSize / 2 + 4}"
           text-anchor="middle"
-          style="font-size: 8px; font-weight: 600; fill: white; pointer-events: none;"
+          style="font-size: 8px; font-weight: 700; fill: white; pointer-events: none;"
         >
-          ${contrib.count > 0 ? contrib.count : ""}
+          ${contrib.count > 99 ? "99+" : contrib.count}
         </text>
       </g>
     `;
@@ -163,7 +164,7 @@ export const renderContributionsCard = (contribData, options = {}) => {
       dayOfWeek = 0;
       weekIndex++;
       xPos += squareSize + squareSpacing;
-      yPos = 80;
+      yPos = 88;
 
       // Check if we've displayed enough weeks
       if (weekIndex >= weeksToShow) {
@@ -194,7 +195,7 @@ export const renderContributionsCard = (contribData, options = {}) => {
     }
   `;
 
-  const detailsY = 160;
+  const detailsY = 278;
 
   const finalSVG = `
     <svg
@@ -235,7 +236,7 @@ export const renderContributionsCard = (contribData, options = {}) => {
         class="card-subtitle"
         style="font-size: 12px; fill: ${colors.textColor}; opacity: 0.7;"
       >
-        Last Year Contributions
+        Recent Contributions (numbers inside each square)
       </text>
 
       <!-- Contribution grid -->
@@ -262,7 +263,7 @@ export const renderContributionsCard = (contribData, options = {}) => {
       <!-- Legend -->
       <g>
         <text
-          x="${width - 200}"
+          x="${width - 220}"
           y="${detailsY}"
           style="font-size: 10px; fill: ${colors.textColor}; opacity: 0.6;"
         >

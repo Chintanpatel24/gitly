@@ -38,7 +38,7 @@ const githubHeaders = () => {
  * @param {string} username GitHub username.
  * @returns {Promise<{
  *  totalCount: number,
- *  prsByRepository: Record<string, Array<{number: number, title: string, state: string, createdAt: string}>>
+ *  prsByRepository: Record<string, Array<{number: number, title: string, state: string, createdAt: string, merged: boolean}>>
  * }>} Pull requests data.
  */
 export const fetchPullRequests = async (username) => {
@@ -87,7 +87,7 @@ export const fetchPullRequests = async (username) => {
       page += 1;
     }
 
-    /** @type {Record<string, Array<{number: number, title: string, state: string, createdAt: string}>>} */
+    /** @type {Record<string, Array<{number: number, title: string, state: string, createdAt: string, merged: boolean}>>} */
     const prsByRepo = {};
 
     allItems.forEach((item) => {
@@ -107,6 +107,7 @@ export const fetchPullRequests = async (username) => {
         title: item.title,
         state: item.state,
         createdAt: item.created_at,
+        merged: Boolean(item.pull_request?.merged_at),
       });
     });
 
