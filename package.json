@@ -1,0 +1,12 @@
+{
+  "name": "github-cards",
+  "version": "2.0.0",
+  "description": "Drop-in SVG GitHub cards — PR tracker & commit heatmap with numbers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": { "node": ">=16" },
+  "license": "MIT"
+}
