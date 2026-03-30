@@ -5,12 +5,15 @@
  * Displays: PR stats, languages, contributions, and repositories
  */
 
-const { fetchUserPullRequests, fetchOpenPullRequests, fetchUserLanguages, fetchContributionData, fetchUserProfile } = require("../src/github");
+const { fetchUserPullRequests, fetchOpenPullRequests, groupPRsByRepo, fetchUserLanguages, fetchContributionData, fetchUserProfile } = require("../src/github");
 const { getTheme, applyColorOverrides } = require("../src/themes");
 const { generateMasterCardSVG } = require("../src/svg-master");
 const { getCache, setCache, clearCache } = require("../src/cache");
 
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+// In-memory visitor counter
+const visitorCounts = {};
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -45,6 +48,11 @@ module.exports = async (req, res) => {
           fetchUserProfile(username).catch(() => ({ public_repos: 0, name: username })),
         ]);
 
+        const repoMap = groupPRsByRepo(prs);
+        const repoList = Object.entries(repoMap)
+          .map(([name, count]) => ({ name, count }))
+          .sort((a, b) => b.count - a.count);
+
         const languageArray = Object.entries(languages || {})
           .map(([name, percentage]) => ({ name, percentage }))
           .sort((a, b) => b.percentage - a.percentage);
@@ -55,6 +63,7 @@ module.exports = async (req, res) => {
           totalPRs: prs.length,
           openPRs: openPRCount,
           repoCount: profile.public_repos || 0,
+          repoList,
           languages: languageArray,
           contributions: totalContributions,
           username,
@@ -71,16 +80,25 @@ module.exports = async (req, res) => {
     let colors = getTheme(theme);
     colors = applyColorOverrides(colors, { bg_color, title_color, text_color, border_color });
 
+    // Get and increment visitor count
+    const userKey = username.toLowerCase();
+    if (!visitorCounts[userKey]) {
+      visitorCounts[userKey] = 0;
+    }
+    visitorCounts[userKey]++;
+
     const svg = generateMasterCardSVG({
       username: data.username,
       totalPRs: data.totalPRs,
       openPRs: data.openPRs,
       repoCount: data.repoCount,
+      repoList: data.repoList,
       languages: data.languages,
       contributions: data.contributions,
+      visitors: visitorCounts[userKey],
       colors,
       hideBorder: hide_border === "true",
-      cardWidth: parseInt(width) || 900,
+      cardWidth: parseInt(width) || 1000,
     });
 
     res.status(200).send(svg);
@@ -91,8 +109,8 @@ module.exports = async (req, res) => {
 };
 
 function errorSVG(msg) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="150" viewBox="0 0 900 150">
-    <rect width="900" height="150" fill="#0d1117" rx="8"/>
-    <text x="450" y="80" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="#f85149">${msg}</text>
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="200" viewBox="0 0 1000 200">
+    <rect width="1000" height="200" fill="#0d1117" rx="8"/>
+    <text x="500" y="110" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="#f85149">${msg}</text>
   </svg>`;
 }

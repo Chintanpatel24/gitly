@@ -57,19 +57,30 @@ Donut graph (new):
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
 ```
 
-### 4. Master Card (NEW!)
+### 4. Master Card (NEW!) - All-in-One Dashboard
 
 <img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true" alt="Master Stats Card" width="100%"/>
 
-All-in-one comprehensive dashboard combining PR stats, languages, contributions, and repositories:
+The ultimate GitHub stats dashboard! Displays everything in one comprehensive card:
+- **Visitor Counter** - Live profile views
+- **PR Stats** - Total & Open pull requests  
+- **Repositories** - Public repo count
+- **Contributions** - Total contributions
+- **Top Repositories** - Your most active repos
+- **Top Languages** - Programming language breakdown
 
 ```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true" width="100%"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-With custom width:
+Custom width (recommended 1000px+):
 ```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=900"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
+```
+
+With theme:
+```html
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&theme=synthwave&hide_border=true"/>
 ```
 
 ### 5. Visitors Counter (NEW!)
@@ -84,36 +95,42 @@ Track profile views with a live visitor counter:
 
 ---
 
-## Unique Classic README Stack
+## Quick Examples
 
+**Single Card (Recommended - All-in-One):**
 ```markdown
-## GitHub Dashboard
-
-<img src="https://gitlyy.vercel.app/api/visitors?username=YOUR_USERNAME&hide_border=true"/>
+## 📊 GitHub Stats
 
 <img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
-
-<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
-
-<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
-
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
----
-
-## Quick Start
-
-**Replace `YOUR_USERNAME` with your GitHub username. That's it.**
-
+**Multiple Views:**
 ```markdown
-## My Stats
+## 🧑‍💻 My GitHub Stats
 
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
+<!-- Comprehensive Dashboard -->
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
 
+<!-- Contribution Activity Graph -->
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
+```
+
+**Individual Cards:**
+```markdown
+<!-- Visitor Counter -->
+<img src="https://gitlyy.vercel.app/api/visitors?username=YOUR_USERNAME&hide_border=true"/>
+
+<!-- Master Dashboard -->
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+
+<!-- Contribution Grid -->
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
 
-<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&hide_border=true"/>
+<!-- Language Distribution -->
+<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
+
+<!-- PR Stats -->
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
 ---
