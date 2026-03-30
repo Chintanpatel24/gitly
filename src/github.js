@@ -228,13 +228,32 @@ async function fetchUserLanguages(username) {
   }
 
   // Convert to array and calculate percentages
-  const languages = Object.entries(langMap)
+  let languages = Object.entries(langMap)
     .map(([name, bytes]) => ({
       name,
       bytes,
-      percentage: totalBytes > 0 ? ((bytes / totalBytes) * 100) : 0,
+      rawPercentage: totalBytes > 0 ? ((bytes / totalBytes) * 100) : 0,
     }))
     .sort((a, b) => b.bytes - a.bytes);
+
+  // Fix percentages to add up to 100%
+  // Round each to 2 decimal places, ensure minimum 0.01%
+  languages = languages.map((lang, idx) => {
+    let pct = Math.round(lang.rawPercentage * 100) / 100;
+    if (pct < 0.01 && lang.bytes > 0) pct = 0.01;
+    return { name: lang.name, bytes: lang.bytes, percentage: pct };
+  });
+
+  // Adjust last item to make total exactly 100%
+  const totalPct = languages.reduce((sum, l) => sum + l.percentage, 0);
+  if (languages.length > 0 && Math.abs(totalPct - 100) > 0.01) {
+    const diff = 100 - totalPct;
+    languages[languages.length - 1].percentage += diff;
+    languages[languages.length - 1].percentage = Math.round(languages[languages.length - 1].percentage * 100) / 100;
+  }
+
+  // Remove languages with 0 bytes
+  languages = languages.filter(l => l.bytes > 0);
 
   return { languages, totalBytes };
 }

@@ -1,9 +1,6 @@
 /**
  * Contribution Numbers Card SVG
- * Matches GitHub's exact grid layout:
- * - Columns = weeks (left to right)
- * - Rows = days of week (Sun at top, Sat at bottom)
- * - Each cell shows the contribution count for that day
+ * Simple horizontal layout - days flow left to right, wrap to next row
  */
 
 const { escapeXml } = require("./svg-pr");
@@ -18,7 +15,9 @@ function getContributionColor(count, maxCount) {
 }
 
 /**
- * Generate contribution grid SVG matching GitHub's exact layout.
+ * Generate contribution grid SVG.
+ * Layout: days flow left to right, wrapping to next row.
+ * Like reading text - left to right, top to bottom.
  */
 function generateContributionSVG(options) {
   const { username, days, totalContributions, colors, hideBorder, title } = options;
@@ -29,99 +28,57 @@ function generateContributionSVG(options) {
 
   const maxCount = Math.max(...days.map((d) => d.count), 1);
 
-  // Build grid: each day goes to its correct (column, row) position
-  // Column = week index, Row = day of week (0=Sun, 6=Sat)
-  const grid = {};
-
-  // Find the starting date's day of week
-  const startDate = new Date(days[0].date + "T00:00:00");
-  const startDayOfWeek = startDate.getDay(); // Should be 0 (Sun) based on data
-
-  // Place each day in the grid
-  for (let i = 0; i < days.length; i++) {
-    const d = new Date(days[i].date + "T00:00:00");
-    const dayOfWeek = d.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-
-    // Calculate which week column this day belongs to
-    // Days are consecutive, so week = floor(i / 7)
-    const weekIdx = Math.floor(i / 7);
-
-    const key = `${weekIdx},${dayOfWeek}`;
-    grid[key] = days[i];
-  }
-
-  const numWeeks = Math.ceil(days.length / 7);
+  // How many cells per row
+  const cellsPerRow = 53;
   const cellSize = 11;
   const cellGap = 3;
   const cellStep = cellSize + cellGap;
-  const padX = 32;
+  const padX = 28;
   const padY = 16;
-  const labelWidth = 30;
   const headerHeight = 46;
-  const gridWidth = numWeeks * cellStep;
-  const gridHeight = 7 * cellStep;
-  const cardWidth = Math.max(gridWidth + padX * 2 + labelWidth, 600);
+  const numRows = Math.ceil(days.length / cellsPerRow);
+  const gridWidth = cellsPerRow * cellStep;
+  const gridHeight = numRows * cellStep;
+  const cardWidth = Math.max(gridWidth + padX * 2, 600);
   const cardHeight = headerHeight + gridHeight + padY + 40;
 
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
   const displayTitle = title || `${username}'s Contributions`;
 
-  // Generate cells
+  // Generate cells - simple left to right, top to bottom
   let cells = "";
-  for (let weekIdx = 0; weekIdx < numWeeks; weekIdx++) {
-    for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-      const key = `${weekIdx},${dayOfWeek}`;
-      const day = grid[key];
-      if (!day) continue;
+  for (let i = 0; i < days.length; i++) {
+    const col = i % cellsPerRow;
+    const row = Math.floor(i / cellsPerRow);
+    const x = padX + col * cellStep;
+    const y = headerHeight + padY + row * cellStep;
+    const color = getContributionColor(days[i].count, maxCount);
 
-      const x = padX + labelWidth + weekIdx * cellStep;
-      const y = headerHeight + padY + dayOfWeek * cellStep;
-      const color = getContributionColor(day.count, maxCount);
+    cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="#${color}"><title>${days[i].date}: ${days[i].count}</title></rect>`;
 
-      cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="#${color}"><title>${day.date}: ${day.count}</title></rect>`;
-
-      if (day.count > 0) {
-        const fs = day.count > 99 ? 5.5 : day.count > 9 ? 6.5 : 7.5;
-        const tc = day.count / maxCount > 0.5 ? "0d1117" : "e6edf3";
-        cells += `<text x="${x + cellSize / 2}" y="${y + cellSize / 2 + 2}" text-anchor="middle" font-family="monospace" font-size="${fs}" font-weight="700" fill="#${tc}" pointer-events="none">${day.count}</text>`;
-      }
+    if (days[i].count > 0) {
+      const fs = days[i].count > 99 ? 5.5 : days[i].count > 9 ? 6.5 : 7.5;
+      const tc = days[i].count / maxCount > 0.5 ? "0d1117" : "e6edf3";
+      cells += `<text x="${x + cellSize / 2}" y="${y + cellSize / 2 + 2}" text-anchor="middle" font-family="monospace" font-size="${fs}" font-weight="700" fill="#${tc}" pointer-events="none">${days[i].count}</text>`;
     }
   }
 
-  // Day labels on left (Sun, Mon, Wed, Fri) - matching GitHub
-  const dayLabels = ["Sun", "", "Tue", "", "Thu", "", "Sat"];
-  let labels = "";
-  dayLabels.forEach((label, idx) => {
-    if (!label) return;
-    const y = headerHeight + padY + idx * cellStep + cellSize / 2 + 3;
-    labels += `<text x="${padX + labelWidth - 4}" y="${y}" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="9" fill="#8b949e">${label}</text>`;
-  });
-
-  // Month labels above grid
-  let monthLabels = "";
+  // Row labels showing date ranges
+  let rowLabels = "";
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  let lastMonth = -1;
-
-  for (let weekIdx = 0; weekIdx < numWeeks; weekIdx++) {
-    // Find the first day in this week column
-    for (let dow = 0; dow < 7; dow++) {
-      const key = `${weekIdx},${dow}`;
-      if (grid[key]) {
-        const d = new Date(grid[key].date + "T00:00:00");
-        const month = d.getMonth();
-        if (month !== lastMonth) {
-          const x = padX + labelWidth + weekIdx * cellStep;
-          monthLabels += `<text x="${x}" y="${headerHeight + padY - 6}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="9" fill="#8b949e">${monthNames[month]}</text>`;
-          lastMonth = month;
-        }
-        break;
-      }
+  for (let r = 0; r < numRows; r++) {
+    const startIdx = r * cellsPerRow;
+    if (startIdx < days.length) {
+      const d = new Date(days[startIdx].date + "T00:00:00");
+      const label = `${monthNames[d.getMonth()]} ${d.getDate()}`;
+      const y = headerHeight + padY + r * cellStep + cellSize / 2 + 3;
+      rowLabels += `<text x="${padX - 4}" y="${y}" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="8" fill="#8b949e">${label}</text>`;
     }
   }
 
   // Legend
-  const legendX = padX + labelWidth;
-  const legendY = headerHeight + padY + gridHeight + 20;
+  const legendX = padX;
+  const legendY = headerHeight + padY + gridHeight + 18;
   const legColors = ["161b22", "0e4429", "006d32", "26a641", "39d353"];
   let legend = `<text x="${legendX}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="9" fill="#8b949e">Less</text>`;
   legColors.forEach((c, i) => {
@@ -138,7 +95,7 @@ function generateContributionSVG(options) {
 <rect x="${cardWidth - padX - 180}" y="12" width="180" height="22" rx="11" fill="#39d353" opacity=".12"/>
 <text x="${cardWidth - padX - 90}" y="27" text-anchor="middle" class="b" fill="#39d353">${totalContributions} contributions</text>
 <line x1="${padX}" y1="${headerHeight}" x2="${cardWidth - padX}" y2="${headerHeight}" stroke="#30363d" stroke-width=".5"/>
-${monthLabels}${labels}${cells}${legend}
+${rowLabels}${cells}${legend}
 </svg>`;
 }
 
