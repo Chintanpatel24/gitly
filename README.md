@@ -34,6 +34,11 @@ Compact:
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
+Pulse graph (new):
+```html
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
+```
+
 ### 3. Language Usage
 
 <img src="https://gitlyy.vercel.app/api/languages?username=torvalds&hide_border=true" alt="Languages"/>
@@ -45,6 +50,27 @@ Compact:
 Compact:
 ```html
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
+```
+
+Donut graph (new):
+```html
+<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
+```
+
+---
+
+## Unique Classic README Stack
+
+```markdown
+## GitHub Dashboard
+
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
 ---
@@ -111,7 +137,7 @@ Add `&theme=NAME`:
 | `username` | GitHub username (required) | `torvalds` |
 | `theme` | Color theme | `dark` |
 | `hide_border` | Hide border | `true` |
-| `layout` | `compact` for summary | `compact` |
+| `layout` | `compact` \/ `pulse` (contribution) \/ `donut` (languages) | `compact` |
 | `bg_color` | Background hex | `010409` |
 | `title_color` | Title color hex | `58a6ff` |
 | `text_color` | Text color hex | `e6edf3` |

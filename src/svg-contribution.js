@@ -14,6 +14,21 @@ function getContributionColor(count, maxCount) {
   return "39d353";
 }
 
+function getLevelFromCount(count) {
+  if (count <= 0) return 0;
+  if (count <= 2) return 1;
+  if (count <= 5) return 2;
+  if (count <= 9) return 3;
+  return 4;
+}
+
+function getContributionColorForDay(day, maxCount) {
+  const level = typeof day.level === "number" ? day.level : getLevelFromCount(day.count);
+  const levelColors = ["161b22", "0e4429", "006d32", "26a641", "39d353"];
+  if (level >= 0 && level <= 4) return levelColors[level];
+  return getContributionColor(day.count, maxCount);
+}
+
 /**
  * Generate contribution grid SVG.
  * Layout: GitHub-like weekly columns (left->right) and weekday rows (top->bottom).
@@ -68,15 +83,14 @@ function generateContributionSVG(options) {
     const row = dateObj.getDay();
     const x = gridStartX + col * cellStep;
     const y = gridStartY + row * cellStep;
-    const color = getContributionColor(sortedDays[i].count, maxCount);
+    const color = getContributionColorForDay(sortedDays[i], maxCount);
 
     cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="#${color}"><title>${sortedDays[i].date}: ${sortedDays[i].count}</title></rect>`;
 
-    if (sortedDays[i].count > 0) {
-      const fs = sortedDays[i].count > 99 ? 5.5 : sortedDays[i].count > 9 ? 6.5 : 7.5;
-      const tc = sortedDays[i].count / maxCount > 0.5 ? "0d1117" : "e6edf3";
-      cells += `<text x="${x + cellSize / 2}" y="${y + cellSize / 2 + 2}" text-anchor="middle" font-family="monospace" font-size="${fs}" font-weight="700" fill="#${tc}" pointer-events="none">${sortedDays[i].count}</text>`;
-    }
+    const fs = sortedDays[i].count > 99 ? 5.5 : sortedDays[i].count > 9 ? 6.5 : 7.2;
+    const tc = sortedDays[i].count === 0 ? "8b949e" : sortedDays[i].count / maxCount > 0.5 ? "0d1117" : "e6edf3";
+    const op = sortedDays[i].count === 0 ? ".55" : "1";
+    cells += `<text x="${x + cellSize / 2}" y="${y + cellSize / 2 + 2}" text-anchor="middle" font-family="monospace" font-size="${fs}" font-weight="700" fill="#${tc}" opacity="${op}" pointer-events="none">${sortedDays[i].count}</text>`;
   }
 
   // Month labels across the top, similar to GitHub.
@@ -129,6 +143,88 @@ ${monthLabels}${weekdayLabels}${cells}${legend}
 }
 
 /**
+ * Pulse graph card with monthly bars + 30-day trend line.
+ */
+function generateContributionPulseSVG(options) {
+  const { username, days, totalContributions, hideBorder, title } = options;
+
+  if (!days || days.length === 0) {
+    return noDataSVG(username, hideBorder);
+  }
+
+  const sortedDays = [...days].sort((a, b) => a.date.localeCompare(b.date));
+  const cardWidth = 780;
+  const cardHeight = 250;
+  const padX = 24;
+  const headerY = 30;
+  const chartX = padX;
+  const chartY = 62;
+  const chartW = cardWidth - padX * 2;
+  const barAreaH = 108;
+  const trendY = 190;
+  const trendH = 36;
+  const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
+  const displayTitle = title || `${username}'s Contribution Pulse`;
+
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const monthMap = new Map();
+  sortedDays.forEach((d) => {
+    const dt = new Date(`${d.date}T00:00:00`);
+    const key = `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}`;
+    const cur = monthMap.get(key) || { label: `${monthNames[dt.getMonth()]} ${String(dt.getFullYear()).slice(-2)}`, total: 0 };
+    cur.total += d.count;
+    monthMap.set(key, cur);
+  });
+
+  const months = Array.from(monthMap.values());
+  const maxMonth = Math.max(...months.map((m) => m.total), 1);
+  const barGap = 8;
+  const barW = Math.max(10, (chartW - barGap * (months.length - 1)) / Math.max(months.length, 1));
+
+  let bars = "";
+  months.forEach((m, i) => {
+    const h = Math.max(2, (m.total / maxMonth) * barAreaH);
+    const x = chartX + i * (barW + barGap);
+    const y = chartY + barAreaH - h;
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="3" fill="#39d353" opacity="${0.35 + (m.total / maxMonth) * 0.65}"><title>${m.label}: ${m.total} commits</title></rect>`;
+    if (i % 2 === 0 || months.length <= 8) {
+      bars += `<text x="${x + barW / 2}" y="${chartY + barAreaH + 13}" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="9" fill="#8b949e">${m.label.split(" ")[0]}</text>`;
+    }
+  });
+
+  const last30 = sortedDays.slice(-30);
+  const max30 = Math.max(...last30.map((d) => d.count), 1);
+  const stepX = last30.length > 1 ? chartW / (last30.length - 1) : 0;
+  let trendPath = "";
+  let trendDots = "";
+  last30.forEach((d, i) => {
+    const x = chartX + i * stepX;
+    const y = trendY + trendH - (d.count / max30) * trendH;
+    trendPath += `${i === 0 ? "M" : "L"}${x},${y} `;
+    trendDots += `<circle cx="${x}" cy="${y}" r="2" fill="#58a6ff"><title>${d.date}: ${d.count} commits</title></circle>`;
+  });
+
+  const activeDays = sortedDays.filter((d) => d.count > 0).length;
+  const avg = (totalContributions / sortedDays.length).toFixed(2);
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
+<style>.t{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.m{font:500 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.n{font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
+<rect width="${cardWidth}" height="${cardHeight}" fill="#0d1117" ${hba}/>
+<rect width="${cardWidth}" height="3" fill="#39d353" rx="8"/>
+<text x="${padX}" y="${headerY}" class="t" fill="#e6edf3">${escapeXml(displayTitle)}</text>
+<rect x="${cardWidth - 250}" y="14" width="226" height="24" rx="12" fill="#39d353" opacity=".12"/>
+<text x="${cardWidth - 137}" y="30" text-anchor="middle" class="m" fill="#39d353">${totalContributions} total commits</text>
+<line x1="${chartX}" y1="${chartY + barAreaH}" x2="${chartX + chartW}" y2="${chartY + barAreaH}" stroke="#30363d" stroke-width=".8"/>
+${bars}
+<text x="${chartX}" y="${trendY - 10}" class="n" fill="#58a6ff">Last 30 days trend</text>
+<path d="${trendPath.trim()}" fill="none" stroke="#58a6ff" stroke-width="2"/>
+${trendDots}
+<text x="${chartX}" y="${cardHeight - 12}" class="m" fill="#8b949e">Active days: ${activeDays} / ${sortedDays.length}</text>
+<text x="${cardWidth - padX}" y="${cardHeight - 12}" text-anchor="end" class="m" fill="#8b949e">Avg/day: ${avg}</text>
+</svg>`;
+}
+
+/**
  * Compact contribution summary card.
  */
 function generateContributionSummarySVG(options) {
@@ -158,4 +254,9 @@ function noDataSVG(username, hideBorder) {
 </svg>`;
 }
 
-module.exports = { generateContributionSVG, generateContributionSummarySVG, getContributionColor };
+module.exports = {
+  generateContributionSVG,
+  generateContributionSummarySVG,
+  generateContributionPulseSVG,
+  getContributionColor,
+};

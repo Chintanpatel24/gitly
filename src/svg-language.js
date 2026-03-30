@@ -153,6 +153,62 @@ function generateLanguageCompactSVG(options) {
 </svg>`;
 }
 
+/**
+ * Donut language graph for README showcases.
+ */
+function generateLanguageDonutSVG(options) {
+  const { username, languages, hideBorder } = options;
+
+  if (!languages || languages.length === 0) {
+    return generateNoLangDataSVG(username, {}, hideBorder);
+  }
+
+  const topLangs = languages.slice(0, 8);
+  const cardWidth = 460;
+  const cardHeight = 250;
+  const cx = 120;
+  const cy = 125;
+  const radius = 74;
+  const strokeW = 22;
+  const hideBorderAttr = hideBorder
+    ? `rx="8"`
+    : `rx="8" stroke="#30363d" stroke-width="1"`;
+
+  let arcs = "";
+  let legend = "";
+  let acc = 0;
+
+  topLangs.forEach((lang, index) => {
+    const pct = lang.percentage;
+    const color = getLanguageColor(lang.name);
+    const circumference = 2 * Math.PI * radius;
+    const seg = (pct / 100) * circumference;
+    const offset = circumference * (1 - acc / 100);
+    acc += pct;
+
+    arcs += `<circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#${color}" stroke-width="${strokeW}" stroke-dasharray="${seg} ${circumference - seg}" stroke-dashoffset="${offset}" transform="rotate(-90 ${cx} ${cy})"><title>${escapeXml(lang.name)}: ${pct.toFixed(1)}%</title></circle>`;
+
+    const ly = 52 + index * 22;
+    legend += `<circle cx="228" cy="${ly}" r="5" fill="#${color}"/>`;
+    legend += `<text x="240" y="${ly + 4}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#e6edf3">${escapeXml(lang.name)}</text>`;
+    legend += `<text x="430" y="${ly + 4}" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">${pct.toFixed(1)}%</text>`;
+  });
+
+  const top = topLangs[0];
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
+  <rect x="0" y="0" width="${cardWidth}" height="${cardHeight}" fill="#0d1117" ${hideBorderAttr}/>
+  <rect x="0" y="0" width="${cardWidth}" height="3" fill="#58a6ff" rx="8"/>
+  <text x="24" y="30" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#e6edf3">${escapeXml(username)}'s Language Donut</text>
+  <circle cx="${cx}" cy="${cy}" r="${radius}" fill="none" stroke="#1f2937" stroke-width="${strokeW}"/>
+  ${arcs}
+  <circle cx="${cx}" cy="${cy}" r="${radius - strokeW}" fill="#0d1117"/>
+  <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="12" fill="#8b949e">Top language</text>
+  <text x="${cx}" y="${cy + 16}" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#e6edf3">${escapeXml(top.name)}</text>
+  ${legend}
+</svg>`;
+}
+
 function generateNoLangDataSVG(username, colors, hideBorder) {
   const cardWidth = 400;
   const cardHeight = 100;
@@ -170,4 +226,5 @@ function generateNoLangDataSVG(username, colors, hideBorder) {
 module.exports = {
   generateLanguageSVG,
   generateLanguageCompactSVG,
+  generateLanguageDonutSVG,
 };

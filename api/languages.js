@@ -7,7 +7,11 @@
 
 const { fetchUserLanguages } = require("../src/github");
 const { getTheme, applyColorOverrides } = require("../src/themes");
-const { generateLanguageSVG, generateLanguageCompactSVG } = require("../src/svg-language");
+const {
+  generateLanguageSVG,
+  generateLanguageCompactSVG,
+  generateLanguageDonutSVG,
+} = require("../src/svg-language");
 const { getCache, setCache, clearCache } = require("../src/cache");
 
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
@@ -54,11 +58,16 @@ module.exports = async (req, res) => {
           username, languages: langData.languages, colors,
           hideBorder: hide_border === "true",
         })
-      : generateLanguageSVG({
-          username, languages: langData.languages, totalBytes: langData.totalBytes, colors,
-          hideBorder: hide_border === "true",
-          maxLangs: parseInt(max_langs) || 12,
-        });
+      : layout === "donut"
+        ? generateLanguageDonutSVG({
+            username, languages: langData.languages, colors,
+            hideBorder: hide_border === "true",
+          })
+        : generateLanguageSVG({
+            username, languages: langData.languages, totalBytes: langData.totalBytes, colors,
+            hideBorder: hide_border === "true",
+            maxLangs: parseInt(max_langs) || 12,
+          });
 
     res.status(200).send(svg);
   } catch (error) {

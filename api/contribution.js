@@ -7,7 +7,11 @@
 
 const { fetchContributionData } = require("../src/github");
 const { getTheme, applyColorOverrides } = require("../src/themes");
-const { generateContributionSVG, generateContributionSummarySVG } = require("../src/svg-contribution");
+const {
+  generateContributionSVG,
+  generateContributionSummarySVG,
+  generateContributionPulseSVG,
+} = require("../src/svg-contribution");
 const { getCache, setCache, clearCache } = require("../src/cache");
 
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
@@ -71,10 +75,15 @@ module.exports = async (req, res) => {
           username, totalContributions, currentStreak, longestStreak, colors,
           hideBorder: hide_border === "true",
         })
-      : generateContributionSVG({
-          username, days, totalContributions, colors,
-          hideBorder: hide_border === "true", title,
-        });
+      : layout === "pulse"
+        ? generateContributionPulseSVG({
+            username, days, totalContributions, colors,
+            hideBorder: hide_border === "true", title,
+          })
+        : generateContributionSVG({
+            username, days, totalContributions, colors,
+            hideBorder: hide_border === "true", title,
+          });
 
     res.status(200).send(svg);
   } catch (error) {
