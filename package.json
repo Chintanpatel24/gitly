@@ -1,0 +1,23 @@
+{
+  "name": "gitly",
+  "version": "1.0.0",
+  "description": "Custom GitHub stats cards - PR stats & contribution numbers for your README",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  },
+  "keywords": [
+    "github",
+    "stats",
+    "card",
+    "svg",
+    "readme",
+    "pull-requests",
+    "contributions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
