@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
 
     if (!data) {
       try {
-        const [prs, openPRCount, languages, contributions, profile] = await Promise.all([
+        const [prs, openPRCount, languages, contributionData, profile] = await Promise.all([
           fetchUserPullRequests(username),
           fetchOpenPullRequests(username),
           fetchUserLanguages(username),
@@ -57,7 +57,8 @@ module.exports = async (req, res) => {
           .map(([name, percentage]) => ({ name, percentage }))
           .sort((a, b) => b.percentage - a.percentage);
 
-        const totalContributions = contributions.totalContributions || 0;
+        const totalContributions = contributionData.totalContributions || 0;
+        const contributionDays = Array.isArray(contributionData.days) ? contributionData.days : [];
 
         data = {
           totalPRs: prs.length,
@@ -66,6 +67,7 @@ module.exports = async (req, res) => {
           repoList,
           languages: languageArray,
           contributions: totalContributions,
+          contributionDays,
           username,
         };
 
@@ -95,6 +97,7 @@ module.exports = async (req, res) => {
       repoList: data.repoList,
       languages: data.languages,
       contributions: data.contributions,
+      contributionDays: data.contributionDays,
       visitors: visitorCounts[userKey],
       colors,
       hideBorder: hide_border === "true",

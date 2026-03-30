@@ -57,20 +57,21 @@ Donut graph (new):
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
 ```
 
-### 4. Master Card (NEW!) - All-in-One Dashboard
+### 4. Master Card (NEW!) - True All-in-One Dashboard
 
 <img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true" alt="Master Stats Card" width="100%"/>
 
-The ultimate GitHub stats dashboard! Displays everything in one comprehensive card:
+The master card now includes all major visual sections in one SVG:
 - **Visitor Counter** - Live profile views
-- **PR Stats** - Total & Open pull requests  
+- **PR Stats** - Total and Open pull requests
 - **Repositories** - Public repo count
 - **Contributions** - Total contributions
-- **Top Repositories** - Your most active repos
-- **Top Languages** - Programming language breakdown
+- **Top Repositories** - Your most active repositories
+- **Top Languages** - Language percentage bars
+- **Contribution Heatmap** - GitHub-style recent activity grid
 
 ```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
 ```
 
 Custom width (recommended 1000px+):
@@ -81,6 +82,11 @@ Custom width (recommended 1000px+):
 With theme:
 ```html
 <img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&theme=synthwave&hide_border=true"/>
+```
+
+If GitHub README shows an old image, force refresh once:
+```html
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&refresh=true"/>
 ```
 
 ### 5. Visitors Counter (NEW!)
@@ -101,7 +107,7 @@ Track profile views with a live visitor counter:
 ```markdown
 ## 📊 GitHub Stats
 
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
 ```
 
 **Multiple Views:**
@@ -109,7 +115,7 @@ Track profile views with a live visitor counter:
 ## 🧑‍💻 My GitHub Stats
 
 <!-- Comprehensive Dashboard -->
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
 
 <!-- Contribution Activity Graph -->
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
