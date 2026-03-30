@@ -111,30 +111,44 @@ function parseContributionHTML(html) {
     totalContributions = parseInt(totalMatch[1].replace(/,/g, ""), 10);
   }
 
-  // Extract dates and levels from td elements (in order)
-  const tdRegex =
-    /<td[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*data-level="(\d+)"[^>]*><\/td>/g;
+  // Extract day cells with stable ids, dates, and levels.
+  const tdRegex = /<td\b[^>]*\bdata-date="\d{4}-\d{2}-\d{2}"[^>]*><\/td>/g;
   const dates = [];
   let match;
   while ((match = tdRegex.exec(html)) !== null) {
-    dates.push({ date: match[1], level: parseInt(match[2], 10) });
+    const tag = match[0];
+    const idMatch = tag.match(/\bid="([^"]+)"/);
+    const dateMatch = tag.match(/\bdata-date="(\d{4}-\d{2}-\d{2})"/);
+    const levelMatch = tag.match(/\bdata-level="(\d+)"/);
+    if (!dateMatch || !levelMatch) continue;
+
+    dates.push({
+      id: idMatch ? idMatch[1] : `day-${dates.length}`,
+      date: dateMatch[1],
+      level: parseInt(levelMatch[1], 10),
+    });
   }
 
-  // Extract contribution counts from tool-tip elements (in order)
-  // Format: "7 contributions on March 30th."
+  // Extract contribution counts from tooltips keyed by their target day cell id.
+  // Formats include:
+  // - "7 contributions on March 30th."
+  // - "1 contribution on ..."
+  // - "No contributions on ..."
   const tipRegex =
-    /<tool-tip[^>]*>(\d+)\s+contribution/g;
-  const counts = [];
+    /<tool-tip[^>]*for="([^"]+)"[^>]*>([\s\S]*?)<\/tool-tip>/g;
+  const countById = new Map();
   while ((match = tipRegex.exec(html)) !== null) {
-    counts.push(parseInt(match[1], 10));
+    const targetId = match[1];
+    const tipText = match[2].replace(/\s+/g, " ").trim();
+    const countMatch = tipText.match(/(\d+)\s+contribution/i);
+    const count = countMatch ? parseInt(countMatch[1], 10) : 0;
+    countById.set(targetId, count);
   }
 
-  // Build days array - match dates with counts by order
+  // Build days array by id so each date receives its own exact count.
   const days = [];
-  const len = Math.min(dates.length, counts.length);
-
   for (let i = 0; i < dates.length; i++) {
-    const count = i < counts.length ? counts[i] : 0;
+    const count = countById.has(dates[i].id) ? countById.get(dates[i].id) : 0;
     days.push({
       date: dates[i].date,
       count: count,
@@ -142,8 +156,8 @@ function parseContributionHTML(html) {
     });
   }
 
-  // If no tool-tips found, estimate from level
-  if (counts.length === 0 && days.length > 0) {
+  // If no tooltips found at all, estimate from level.
+  if (countById.size === 0 && days.length > 0) {
     const levelEstimates = { 0: 0, 1: 2, 2: 5, 3: 8, 4: 15 };
     for (const day of days) {
       day.count = levelEstimates[day.level] || 0;
