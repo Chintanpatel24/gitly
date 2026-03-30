@@ -8,19 +8,21 @@ Embeddable SVG cards for your GitHub README showing pull request stats and contr
 
 Shows your total pull requests grouped by repository.
 
+**Live URL:** `https://gitlyy.vercel.app`
+
 **Full layout (default):**
 ```
-https://https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME
+https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME
 ```
 
-<img src="https://your-vercel-url/api/pr-stats?username=torvalds&theme=dark&hide_border=true" alt="PR Stats" width="420"/>
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=torvalds&theme=dark&hide_border=true" alt="PR Stats" width="420"/>
 
 **Compact layout:**
 ```
-https://your-vercel-url/api/pr-stats?username=YOUR_USERNAME&layout=compact
+https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact
 ```
 
-<img src="https://your-vercel-url/api/pr-stats?username=torvalds&layout=compact&theme=dark&hide_border=true" alt="PR Stats Compact" height="155"/>
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=torvalds&layout=compact&theme=dark&hide_border=true" alt="PR Stats Compact" height="155"/>
 
 ---
 
@@ -30,12 +32,12 @@ GitHub contribution grid with actual commit counts per day instead of colored do
 
 **Grid layout (default):**
 ```
-https://your-vercel-url/api/contribution?username=YOUR_USERNAME
+https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME
 ```
 
 **Compact layout (summary stats):**
 ```
-https://your-vercel-url/api/contribution?username=YOUR_USERNAME&layout=compact
+https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact
 ```
 
 ---
@@ -52,7 +54,7 @@ Deploy your own instance to Vercel (free tier works):
 
 1. **Fork this repository**
 
-2. **Create a Vercel account** at [vercel.com](https://gitlyy.vercel.app/) (free)
+2. **Create a Vercel account** at [vercel.com](https://vercel.com) (free)
 
 3. **Import your forked repo** in Vercel:
    - Click "Add New..." -> "Project"
@@ -78,20 +80,20 @@ In Vercel dashboard:
 
 ```html
 <!-- Full layout - shows all repos -->
-<img src="https://YOUR_VERCEL_URL/api/pr-stats?username=YOUR_GITHUB_USERNAME" />
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_GITHUB_USERNAME" />
 
 <!-- Compact layout - summary only -->
-<img src="https://YOUR_VERCEL_URL/api/pr-stats?username=YOUR_GITHUB_USERNAME&layout=compact" height="155" />
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_GITHUB_USERNAME&layout=compact" height="155" />
 ```
 
 ### Contribution Numbers Card
 
 ```html
 <!-- Grid layout - daily numbers in green shades -->
-<img src="https://YOUR_VERCEL_URL/api/contribution?username=YOUR_GITHUB_USERNAME" />
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_GITHUB_USERNAME" />
 
 <!-- Compact layout - total, current streak, longest streak -->
-<img src="https://YOUR_VERCEL_URL/api/contribution?username=YOUR_GITHUB_USERNAME&layout=compact" height="155" />
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_GITHUB_USERNAME&layout=compact" height="155" />
 ```
 
 ### Markdown Example
@@ -99,9 +101,9 @@ In Vercel dashboard:
 ```markdown
 ### My GitHub Stats
 
-![PR Stats](https://gitly.vercel.app/api/pr-stats?username=octocat&theme=dark&hide_border=true&layout=compact)
+![PR Stats](https://gitlyy.vercel.app/api/pr-stats?username=octocat&theme=dark&hide_border=true&layout=compact)
 
-![Contributions](https://gitly.vercel.app/api/contribution?username=octocat&theme=dark&hide_border=true)
+![Contributions](https://gitlyy.vercel.app/api/contribution?username=octocat&theme=dark&hide_border=true)
 ```
 
 ---
@@ -170,15 +172,15 @@ Or override specific colors: `?bg_color=000000&title_color=ff0000&text_color=fff
 ## My GitHub Stats
 
 <p>
-  <img height="155em" src="https://gitly.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&theme=synthwave&bg_color=070d0d&border_color=white&title_color=orange&text_color=white&hide_border=true"/>
+  <img height="155em" src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&theme=synthwave&bg_color=070d0d&border_color=white&title_color=orange&text_color=white&hide_border=true"/>
 </p>
 
 <p>
-  <img src="https://gitly.vercel.app/api/contribution?username=YOUR_USERNAME&theme=github_dark&hide_border=true"/>
+  <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&theme=github_dark&hide_border=true"/>
 </p>
 
 <p>
-  <img height="155em" src="https://gitly.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact&theme=synthwave&bg_color=070d0d&title_color=orange&text_color=white&hide_border=true"/>
+  <img height="155em" src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact&theme=synthwave&bg_color=070d0d&title_color=orange&text_color=white&hide_border=true"/>
 </p>
 ```
 
@@ -190,7 +192,7 @@ Or override specific colors: `?bg_color=000000&title_color=ff0000&text_color=fff
 User's README
      │
      ▼
-<img src="https://gitly.vercel.app/api/pr-stats?username=xxx">
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=xxx">
      │
      ▼
 Vercel Serverless Function

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gitly - Custom GitHub Stats Cards</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0e4429;
+      color: #39d353;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #39d353;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    h1 {
+      color: #58a6ff;
+      font-size: 42px;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #8b949e;
+      font-size: 18px;
+      margin-bottom: 40px;
+    }
+    .cards-section {
+      width: 100%;
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+    .card-label {
+      color: #8b949e;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .card-preview {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+    }
+    .card-preview img {
+      max-width: 100%;
+      height: auto;
+    }
+    .code-block {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    .code-block code {
+      color: #c9d1d9;
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .code-label {
+      color: #8b949e;
+      font-size: 12px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .section-title {
+      color: #58a6ff;
+      font-size: 20px;
+      margin-bottom: 16px;
+      margin-top: 20px;
+    }
+    .info {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 700px;
+      width: 100%;
+      margin-top: 20px;
+    }
+    .info p {
+      color: #8b949e;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+    .info a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    .info a:hover {
+      text-decoration: underline;
+    }
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    .params-table th, .params-table td {
+      text-align: left;
+      padding: 8px 12px;
+      border-bottom: 1px solid #21262d;
+      font-size: 13px;
+    }
+    .params-table th {
+      color: #8b949e;
+      font-weight: 600;
+    }
+    .params-table td {
+      color: #c9d1d9;
+    }
+    .params-table code {
+      background: #1f2937;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #58a6ff;
+    }
+    footer {
+      margin-top: 40px;
+      color: #484f58;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="status">
+    <span class="status-dot"></span>
+    Gitly is live
+  </div>
+
+  <h1>Gitly</h1>
+  <p class="subtitle">Custom GitHub stats cards for your README</p>
+
+  <!-- PR Stats Card Preview -->
+  <div class="cards-section">
+    <div class="card-label">Pull Request Stats Card (Compact)</div>
+    <div class="card-preview">
+      <img src="/api/pr-stats?username=torvalds&layout=compact&theme=dark&hide_border=true" alt="PR Stats Card" onerror="this.parentElement.innerHTML='<span style=color:#f85149>Card failed to load. Try: /api/pr-stats?username=YOUR_USERNAME</span>'"/>
+    </div>
+
+    <div class="card-label">Pull Request Stats Card (Full)</div>
+    <div class="card-preview">
+      <img src="/api/pr-stats?username=torvalds&theme=dark&hide_border=true" alt="PR Stats Full Card" onerror="this.parentElement.innerHTML='<span style=color:#f85149>Card failed to load.</span>'"/>
+    </div>
+
+    <div class="card-label">Contribution Numbers Card (Grid)</div>
+    <div class="card-preview">
+      <img src="/api/contribution?username=torvalds&theme=github_dark&hide_border=true" alt="Contribution Card" onerror="this.parentElement.innerHTML='<span style=color:#f85149>Card failed to load. Try: /api/contribution?username=YOUR_USERNAME</span>'"/>
+    </div>
+
+    <div class="card-label">Contribution Numbers Card (Compact)</div>
+    <div class="card-preview">
+      <img src="/api/contribution?username=torvalds&layout=compact&theme=dark&hide_border=true" alt="Contribution Compact Card" onerror="this.parentElement.innerHTML='<span style=color:#f85149>Card failed to load.</span>'"/>
+    </div>
+  </div>
+
+  <!-- Usage -->
+  <div class="info">
+    <div class="section-title">How to Use</div>
+
+    <div class="code-label">PR Stats Card</div>
+    <div class="code-block">
+      <code>&lt;img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&theme=dark&hide_border=true"/&gt;</code>
+    </div>
+
+    <div class="code-label">Contribution Numbers Card</div>
+    <div class="code-block">
+      <code>&lt;img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&theme=dark&hide_border=true"/&gt;</code>
+    </div>
+
+    <div class="code-label">Paste in your README.md</div>
+    <div class="code-block">
+      <code>![My PR Stats](https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true)
+
+![My Contributions](https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&theme=github_dark&hide_border=true)</code>
+    </div>
+  </div>
+
+  <!-- Parameters -->
+  <div class="info">
+    <div class="section-title">Parameters</div>
+    <table class="params-table">
+      <tr>
+        <th>Parameter</th>
+        <th>Description</th>
+        <th>Example</th>
+      </tr>
+      <tr>
+        <td><code>username</code></td>
+        <td>GitHub username (required)</td>
+        <td><code>torvalds</code></td>
+      </tr>
+      <tr>
+        <td><code>theme</code></td>
+        <td>Color theme</td>
+        <td><code>dark</code> <code>synthwave</code> <code>dracula</code></td>
+      </tr>
+      <tr>
+        <td><code>hide_border</code></td>
+        <td>Hide card border</td>
+        <td><code>true</code> <code>false</code></td>
+      </tr>
+      <tr>
+        <td><code>layout</code></td>
+        <td>Card layout</td>
+        <td><code>compact</code></td>
+      </tr>
+      <tr>
+        <td><code>bg_color</code></td>
+        <td>Custom background (hex)</td>
+        <td><code>070d0d</code></td>
+      </tr>
+      <tr>
+        <td><code>title_color</code></td>
+        <td>Custom title color (hex)</td>
+        <td><code>orange</code></td>
+      </tr>
+      <tr>
+        <td><code>text_color</code></td>
+        <td>Custom text color (hex)</td>
+        <td><code>white</code></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Themes -->
+  <div class="info">
+    <div class="section-title">Themes</div>
+    <p>
+      <code>default</code>
+      <code>dark</code>
+      <code>synthwave</code>
+      <code>radical</code>
+      <code>tokyonight</code>
+      <code>dracula</code>
+      <code>gruvbox</code>
+      <code>monokai</code>
+      <code>nord</code>
+      <code>solarized_dark</code>
+      <code>solarized_light</code>
+      <code>catppuccin</code>
+      <code>github_dark</code>
+      <code>highcontrast</code>
+    </p>
+  </div>
+
+  <footer>
+    Gitly &mdash; Data cached every 40 minutes &mdash; No auth required
+  </footer>
+
+</body>
+</html>
