@@ -5,11 +5,11 @@
 
 const themes = {
   default: {
-    bg_color: "ffffff",
-    title_color: "2f80ed",
-    text_color: "434d58",
-    border_color: "e4e2e2",
-    accent_color: "2f80ed",
+    bg_color: "0d1117",
+    title_color: "58a6ff",
+    text_color: "c9d1d9",
+    border_color: "30363d",
+    accent_color: "58a6ff",
   },
   dark: {
     bg_color: "0d1117",
