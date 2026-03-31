@@ -1,12 +1,8 @@
-</p>
+<div align=center>
 
-<h1 align="center">Gitly</h1>
+![title image](images/gitlyy.png)
 
-<p align="center">
-  Custom GitHub stats cards for your README. Real data. No auth required.
-  <br/>
-  <a href="https://gitlyy.vercel.app"><strong>Live Demo</strong></a>
-</p>
+</div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/status-live-brightgreen" alt="Status"/>
@@ -16,14 +12,13 @@
 </p>
 
 ---
-
-## All Cards
+> ## Custom GitHub stats cards for your README. Real data. No auth required.
 
 ### 1. Profile Card
 
-Shows user info: avatar, name, bio, join date, repos, followers, and following.
+- Shows user info: avatar, name, bio, join date, repos, followers, and following.
 
-<img src="https://gitlyy.vercel.app/api/profile?username=torvalds&hide_border=true" alt="Profile Card"/>
+<img src="images/1.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&hide_border=true"/>
@@ -33,18 +28,15 @@ Shows user info: avatar, name, bio, join date, repos, followers, and following.
 
 ### 2. Contribution Numbers
 
-GitHub-style contribution heatmap with daily commit counts.
+- GitHub-style contribution heatmap with daily commit counts.
 
-<img src="https://gitlyy.vercel.app/api/contribution?username=torvalds&hide_border=true" alt="Contribution Grid"/>
+<img src="images/2.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-**Compact** (total, current streak, longest streak):
-```html
-<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
-```
+
 
 **Pulse** (monthly bars + 30-day trend):
 ```html
@@ -77,7 +69,7 @@ Horizontal stacked bar of languages with percentages using GitHub's official col
 
 ### 4. Streak Card
 
-Current and longest contribution streaks with fire visual and progress bar.
+I.Current and longest contribution streaks with fire visual and progress bar.
 
 <img src="https://gitlyy.vercel.app/api/streak?username=torvalds&hide_border=true" alt="Streak Card"/>
 
@@ -85,6 +77,13 @@ Current and longest contribution streaks with fire visual and progress bar.
 <img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
+II.**Compact** (total, current streak, longest streak):
+
+<img src="images/3.png">
+
+```html
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
+```
 ---
 
 ### 5. Commits Ranking
