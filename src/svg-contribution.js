@@ -29,6 +29,31 @@ function getContributionColorForDay(day, maxCount) {
   return getContributionColor(day.count, maxCount);
 }
 
+function getCellSizeForCount(count, baseCellSize) {
+  if (count >= 150) return baseCellSize + 8;
+  if (count >= 100) return baseCellSize + 6;
+  if (count >= 80) return baseCellSize + 4;
+  if (count >= 50) return baseCellSize + 2;
+  return baseCellSize;
+}
+
+function isLightHexColor(hex) {
+  const value = String(hex || "").replace("#", "");
+  if (!/^[0-9a-fA-F]{6}$/.test(value)) return false;
+  const r = parseInt(value.slice(0, 2), 16);
+  const g = parseInt(value.slice(2, 4), 16);
+  const b = parseInt(value.slice(4, 6), 16);
+  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return luminance >= 0.5;
+}
+
+function getCountFontSize(count, boxSize) {
+  if (count > 999) return Math.max(8, boxSize * 0.38);
+  if (count > 99) return Math.max(8.8, boxSize * 0.48);
+  if (count > 9) return Math.max(9.5, boxSize * 0.56);
+  return Math.max(10, boxSize * 0.6);
+}
+
 /**
  * Generate contribution grid SVG.
  * Layout: GitHub-like weekly columns (left->right) and weekday rows (top->bottom).
@@ -42,9 +67,10 @@ function generateContributionSVG(options) {
 
   const maxCount = Math.max(...days.map((d) => d.count), 1);
 
-  const cellSize = 16;
+  const baseCellSize = 16;
+  const maxCellSize = baseCellSize + 8;
   const cellGap = 4;
-  const cellStep = cellSize + cellGap;
+  const cellStep = maxCellSize + cellGap;
   const padX = 20;
   const padY = 20;
   const headerHeight = 54;
@@ -81,16 +107,19 @@ function generateContributionSVG(options) {
     const diffDays = Math.floor((dateObj - startSunday) / msPerDay);
     const col = Math.floor(diffDays / 7);
     const row = dateObj.getDay();
-    const x = gridStartX + col * cellStep;
-    const y = gridStartY + row * cellStep;
+    const slotX = gridStartX + col * cellStep;
+    const slotY = gridStartY + row * cellStep;
     const color = getContributionColorForDay(sortedDays[i], maxCount);
+    const dynamicCellSize = getCellSizeForCount(sortedDays[i].count, baseCellSize);
+    const x = slotX + (maxCellSize - dynamicCellSize) / 2;
+    const y = slotY + (maxCellSize - dynamicCellSize) / 2;
 
-    cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="2" fill="#${color}"><title>${sortedDays[i].date}: ${sortedDays[i].count}</title></rect>`;
+    cells += `<rect x="${x}" y="${y}" width="${dynamicCellSize}" height="${dynamicCellSize}" rx="2" fill="#${color}"><title>${sortedDays[i].date}: ${sortedDays[i].count}</title></rect>`;
 
-    const fs = sortedDays[i].count > 99 ? 8 : sortedDays[i].count > 9 ? 9.5 : 10.5;
-    const tc = sortedDays[i].count === 0 ? "8b949e" : sortedDays[i].count / maxCount > 0.5 ? "0d1117" : "e6edf3";
+    const fs = getCountFontSize(sortedDays[i].count, dynamicCellSize);
+    const tc = sortedDays[i].count === 0 ? "8b949e" : isLightHexColor(color) ? "0d1117" : "e6edf3";
     const op = sortedDays[i].count === 0 ? ".55" : "1";
-    cells += `<text x="${x + cellSize / 2}" y="${y + cellSize / 2 + 2.5}" text-anchor="middle" font-family="monospace" font-size="${fs}" font-weight="700" fill="#${tc}" opacity="${op}" pointer-events="none">${sortedDays[i].count}</text>`;
+    cells += `<text x="${x + dynamicCellSize / 2}" y="${y + dynamicCellSize / 2 + 2.8}" text-anchor="middle" font-family="monospace" font-size="${fs}" font-weight="700" fill="#${tc}" opacity="${op}" pointer-events="none">${sortedDays[i].count}</text>`;
   }
 
   // Month labels across the top, similar to GitHub.
@@ -114,7 +143,7 @@ function generateContributionSVG(options) {
     { row: 5, label: "Fri" },
   ]
     .map(({ row, label }) => {
-      const y = gridStartY + row * cellStep + cellSize / 2 + 4;
+      const y = gridStartY + row * cellStep + maxCellSize / 2 + 4;
       return `<text x="${gridStartX - 8}" y="${y}" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">${label}</text>`;
     })
     .join("");
@@ -125,9 +154,9 @@ function generateContributionSVG(options) {
   const legColors = ["161b22", "0e4429", "006d32", "26a641", "39d353"];
   let legend = `<text x="${legendX}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Less</text>`;
   legColors.forEach((c, i) => {
-    legend += `<rect x="${legendX + 32 + i * (cellSize + 2)}" y="${legendY - 9}" width="${cellSize - 1}" height="${cellSize - 1}" rx="2" fill="#${c}"/>`;
+    legend += `<rect x="${legendX + 32 + i * (baseCellSize + 2)}" y="${legendY - 9}" width="${baseCellSize - 1}" height="${baseCellSize - 1}" rx="2" fill="#${c}"/>`;
   });
-  legend += `<text x="${legendX + 32 + 5 * (cellSize + 2) + 6}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">More</text>`;
+  legend += `<text x="${legendX + 32 + 5 * (baseCellSize + 2) + 6}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">More</text>`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
 <style>.t{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.b{font:500 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
