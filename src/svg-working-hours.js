@@ -7,7 +7,6 @@
 function generateWorkingHoursSVG(options) {
   const {
     totalHours = 0,
-    commitCount = 0,
     colors,
     hideBorder,
     cardWidth = 460,
@@ -19,10 +18,6 @@ function generateWorkingHoursSVG(options) {
   const accentColor = (colors && colors.accent_color) || "58a6ff";
 
   const formattedHours = Math.round(totalHours).toLocaleString();
-  const formattedCommits = commitCount.toLocaleString();
-
-  // Calculate hours per commit for context
-  const hoursPerCommit = commitCount > 0 ? (totalHours / commitCount).toFixed(2) : 0;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
   <style>
@@ -47,8 +42,7 @@ function generateWorkingHoursSVG(options) {
   <line x1="${P}" y1="115" x2="${cardWidth - P}" y2="115" stroke="#30363d" stroke-width=".5"/>
 
   <g transform="translate(${P},125)">
-    <text x="0" y="12" class="stat" fill="#8b949e">Commits: <tspan fill="#e6edf3" font-weight="600">${formattedCommits}</tspan></text>
-    <text x="0" y="28" class="stat" fill="#8b949e">Avg per commit: <tspan fill="#e6edf3" font-weight="600">${hoursPerCommit}h</tspan></text>
+    <text x="0" y="12" class="stat" fill="#8b949e">Estimated from commit activity timeline</text>
   </g>
 </svg>`;
 }
