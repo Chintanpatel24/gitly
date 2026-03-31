@@ -28,7 +28,7 @@
 
 ### 2. Contribution Numbers
 
-- GitHub-style contribution heatmap with daily commit counts.
+ I. GitHub-style contribution heatmap with daily commit counts.
 
 <img src="images/2.png">
 
@@ -36,9 +36,10 @@
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-
-
-**Pulse** (monthly bars + 30-day trend):
+ II. **Pulse** (monthly bars + 30-day trend):
+ 
+ <img src="images/4.png">
+ 
 ```html
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
 ```
@@ -47,20 +48,26 @@
 
 ### 3. Language Usage
 
-Horizontal stacked bar of languages with percentages using GitHub's official colors.
+ I. Horizontal stacked bar of languages with percentages using GitHub's official colors.
 
-<img src="https://gitlyy.vercel.app/api/languages?username=torvalds&hide_border=true" alt="Languages"/>
+<img src="images/5.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-**Compact**:
+ II. **Compact**:
+ 
+<img src="images/6.png">
+
 ```html
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
-**Donut**:
+ III. **Donut**:
+ 
+ <img src="images/7.png">
+
 ```html
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
 ```
@@ -69,15 +76,15 @@ Horizontal stacked bar of languages with percentages using GitHub's official col
 
 ### 4. Streak Card
 
-I.Current and longest contribution streaks with fire visual and progress bar.
+I. Current and longest contribution streaks with fire visual and progress bar.
 
-<img src="https://gitlyy.vercel.app/api/streak?username=torvalds&hide_border=true" alt="Streak Card"/>
+<img src="images/8.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-II.**Compact** (total, current streak, longest streak):
+II. **Compact** (total, current streak, longest streak):
 
 <img src="images/3.png">
 
@@ -88,37 +95,42 @@ II.**Compact** (total, current streak, longest streak):
 
 ### 5. Commits Ranking
 
-PR-style ranked list of days from highest to lowest commit count, with large green square markers and count bars.
+ I. PR-style ranked list of days from highest to lowest commit count, with large green square markers and count bars.
 
-<img src="https://gitlyy.vercel.app/api/commits?username=torvalds&hide_border=true" alt="Commits Ranking"/>
+<img src="images/9.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-**Custom width**:
+ II. **Custom width**:
+ 
 ```html
 <img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&width=520&hide_border=true"/>
 ```
 
-**Compact** (best day, active days, daily average):
+ III. **Compact** (best day, active days, daily average):
+
 ```html
 <img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
 ---
 
-### 6. Pull Request Stats
+### 6. Pull Request Stats 
 
-PR count with per-repository breakdown and progress bars.
+ I. PR count with per-repository breakdown and progress bars.
 
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=torvalds&hide_border=true" alt="PR Stats"/>
+<img src="images/11.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-**Compact**:
+ II. **Compact**:
+
+<img src="images/12.png">
+
 ```html
 <img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
@@ -127,9 +139,9 @@ PR count with per-repository breakdown and progress bars.
 
 ### 7. Working Hours
 
-Calculates actual coding hours by analyzing commit timestamp gaps.
+- Calculates actual coding hours by analyzing commit timestamp gaps.
 
-<img src="https://gitlyy.vercel.app/api/working-hours?username=torvalds&hide_border=true" alt="Working Hours"/>
+<img src="images/13.png">
 
 **Formula:** `TWt = Σ (Ti+1 - Ti) for all i where (Ti+1 - Ti) < 5 hours`
 
