@@ -103,6 +103,46 @@
     </div>
   </div>
 
+  <!-- Master Card -->
+  <div class="section">
+    <div class="label">Master Dashboard</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/master?username=torvalds" alt="Master Card" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="section">
+    <div class="label">Profile Card</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/profile?username=torvalds" alt="Profile Card" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Streak Card -->
+  <div class="section">
+    <div class="label">Streak Card</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/streak?username=torvalds" alt="Streak Card" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Activity Calendar -->
+  <div class="section">
+    <div class="label">Activity Calendar</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/calendar?username=torvalds" alt="Activity Calendar" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Commits Ranking -->
+  <div class="section">
+    <div class="label">Commits Ranking &mdash; Top Days</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/commits?username=torvalds" alt="Commits Ranking" loading="lazy"/>
+    </div>
+  </div>
+
   <!-- Usage -->
   <div class="code-section">
     <div class="code-title">Copy &amp; Paste</div>
@@ -123,14 +163,36 @@
       <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>
     <div class="code-group">
+      <div class="code-label">Commits Ranking</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Streak</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Profile</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Activity Calendar</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
       <div class="code-label">All Cards</div>
-      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&amp;layout=compact&amp;hide_border=true"/&gt;
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
 
 &lt;img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
 
 &lt;img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
 
-&lt;img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+&lt;img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>
   </div>
 

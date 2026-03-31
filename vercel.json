@@ -11,6 +11,10 @@
     { "src": "/api/master", "dest": "/api/master.js" },
     { "src": "/api/working-hours", "dest": "/api/working-hours.js" },
     { "src": "/api/visitors", "dest": "/api/visitors.js" },
+    { "src": "/api/commits", "dest": "/api/commits.js" },
+    { "src": "/api/streak", "dest": "/api/streak.js" },
+    { "src": "/api/profile", "dest": "/api/profile.js" },
+    { "src": "/api/calendar", "dest": "/api/calendar.js" },
     { "src": "/", "dest": "/public/index.html" },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]

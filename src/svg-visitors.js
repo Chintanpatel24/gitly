@@ -8,7 +8,7 @@ function generateVisitorsSVG(options) {
     count = 0,
     colors,
     hideBorder,
-    cardWidth = 400,
+    cardWidth = 460,
   } = options;
 
   const cardHeight = 120;

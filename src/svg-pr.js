@@ -4,7 +4,7 @@
  */
 
 function generatePRCardSVG(options) {
-  const { username, repoMap, totalPRs, openPRs = 0, colors, title, hideBorder, cardWidth = 440 } = options;
+  const { username, repoMap, totalPRs, openPRs = 0, colors, title, hideBorder, cardWidth = 460 } = options;
   const repos = Object.entries(repoMap).sort((a, b) => b[1] - a[1]);
   const maxShow = Math.min(repos.length, 12);
   const rowH = 28, pad = 24, hdr = 100;
@@ -41,7 +41,7 @@ function generatePRCardSVG(options) {
 }
 
 function generatePRSummarySVG(options) {
-  const { username, totalPRs, openPRs = 0, repoCount, colors, hideBorder, cardWidth = 400, cardHeight = 165 } = options;
+  const { username, totalPRs, openPRs = 0, repoCount, colors, hideBorder, cardWidth = 460, cardHeight = 165 } = options;
   const P = 24;
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
   const sw = (cardWidth - P * 2 - 24) / 3;

@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
       count: visitorCounts[userKey],
       colors,
       hideBorder: hide_border === "true",
-      cardWidth: parseInt(width) || 400,
+      cardWidth: parseInt(width) || 460,
     });
 
     res.status(200).send(svg);
@@ -61,8 +61,8 @@ module.exports = async (req, res) => {
 };
 
 function errorSVG(msg) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120" viewBox="0 0 400 120">
-    <rect width="400" height="120" fill="#0d1117" rx="8"/>
-    <text x="200" y="65" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#f85149">${msg}</text>
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="120" viewBox="0 0 460 120">
+    <rect width="460" height="120" fill="#0d1117" rx="8"/>
+    <text x="230" y="65" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="12" fill="#f85149">${msg}</text>
   </svg>`;
 }

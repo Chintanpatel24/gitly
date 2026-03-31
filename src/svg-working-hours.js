@@ -12,7 +12,7 @@ function generateWorkingHoursSVG(options) {
     activeDays = 0,
     colors,
     hideBorder,
-    cardWidth = 400,
+    cardWidth = 460,
   } = options;
 
   const cardHeight = 160;

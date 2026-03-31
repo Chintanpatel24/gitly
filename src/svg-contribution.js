@@ -258,7 +258,7 @@ ${trendDots}
  */
 function generateContributionSummarySVG(options) {
   const { username, totalContributions, currentStreak, longestStreak, colors, hideBorder } = options;
-  const W = 420, H = 170, P = 24;
+  const W = 460, H = 170, P = 24;
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -276,10 +276,10 @@ function generateContributionSummarySVG(options) {
 
 function noDataSVG(username, hideBorder) {
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120" viewBox="0 0 400 120">
-<rect width="400" height="120" fill="#0d1117" ${hba}/>
-<text x="200" y="55" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="#e6edf3">${escapeXml(username)}'s Contributions</text>
-<text x="200" y="78" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#8b949e">No data found</text>
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="120" viewBox="0 0 460 120">
+<rect width="460" height="120" fill="#0d1117" ${hba}/>
+<text x="230" y="55" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="#e6edf3">${escapeXml(username)}'s Contributions</text>
+<text x="230" y="78" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#8b949e">No data found</text>
 </svg>`;
 }
 

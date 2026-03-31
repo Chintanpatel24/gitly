@@ -1,27 +1,53 @@
-# Gitly - Custom GitHub Stats Cards
+<p align="center">
+  <img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true&width=1000" alt="Gitly Master Card" width="100%"/>
+</p>
 
-Embeddable SVG cards for your GitHub README. Real data. No auth required.
+<h1 align="center">Gitly</h1>
 
-**Live:** https://gitlyy.vercel.app
+<p align="center">
+  Custom GitHub stats cards for your README. Real data. No auth required.
+  <br/>
+  <a href="https://gitlyy.vercel.app"><strong>Live Demo</strong></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/status-live-brightgreen" alt="Status"/>
+  <img src="https://img.shields.io/badge/dependencies-zero-blue" alt="Zero Dependencies"/>
+  <img src="https://img.shields.io/badge/auth-not_required-blue" alt="No Auth"/>
+  <img src="https://img.shields.io/badge/cache-auto_refresh-orange" alt="Auto Cache"/>
+</p>
 
 ---
 
-## Cards
+## All Cards
 
-### 1. Pull Request Stats
+### 1. Master Dashboard
 
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=torvalds&layout=compact&hide_border=true" alt="PR Stats Compact" height="165"/>
+All-in-one stats card with visitors, PRs, repos, contributions, streaks, top repos, top languages, 30-day trend, and activity heatmap.
+
+<img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true" alt="Master Card" width="100%"/>
 
 ```html
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
 ```
 
-Full layout (repo list):
+---
+
+### 2. Profile Card
+
+Shows user info: avatar, name, bio, join date, repos, followers, and following.
+
+<img src="https://gitlyy.vercel.app/api/profile?username=torvalds&hide_border=true" alt="Profile Card"/>
+
 ```html
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-### 2. Contribution Numbers
+---
+
+### 3. Contribution Numbers
+
+GitHub-style contribution heatmap with daily commit counts.
 
 <img src="https://gitlyy.vercel.app/api/contribution?username=torvalds&hide_border=true" alt="Contribution Grid"/>
 
@@ -29,17 +55,21 @@ Full layout (repo list):
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-Compact:
+**Compact** (total, current streak, longest streak):
 ```html
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
-Pulse graph (new):
+**Pulse** (monthly bars + 30-day trend):
 ```html
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
 ```
 
-### 3. Language Usage
+---
+
+### 4. Language Usage
+
+Horizontal stacked bar of languages with percentages using GitHub's official colors.
 
 <img src="https://gitlyy.vercel.app/api/languages?username=torvalds&hide_border=true" alt="Languages"/>
 
@@ -47,225 +77,242 @@ Pulse graph (new):
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-Compact:
+**Compact**:
 ```html
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
-Donut graph (new):
+**Donut**:
 ```html
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
-```
-
-### 4. Working Hours - Total Coding Time
-
-<img src="https://gitlyy.vercel.app/api/working-hours?username=torvalds&hide_border=true" alt="Working Hours" height="140"/>
-
-Displays estimated total coding hours worked on GitHub since account creation. Auto-refreshes every 2 hours based on new activity.
-
-Calculation: `Total Contributions × 1.5 hours/commit` (accounts for thinking, coding, testing, debugging, reviewing)
-
-```html
-<img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&hide_border=true"/>
-```
-
-### 5. Master Card (NEW!) - True All-in-One Dashboard
-
-<img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true" alt="Master Stats Card" width="100%"/>
-
-The master card now includes all major visual sections in one SVG:
-- **Visitor Counter** - Live profile views
-- **PR Stats** - Total and Open pull requests
-- **Repositories** - Public repo count
-- **Contributions** - Total contributions
-- **Top Repositories** - Your most active repositories
-- **Top Languages** - Language percentage bars
-- **Contribution Heatmap** - GitHub-style recent activity grid
-
-```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
-```
-
-Custom width (recommended 1000px+):
-```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
-```
-
-With theme:
-```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&theme=synthwave&hide_border=true"/>
-```
-
-If GitHub README shows an old image, force refresh once:
-```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&refresh=true"/>
-```
-
-### 6. Visitors Counter (NEW!)
-
-<img src="https://gitlyy.vercel.app/api/visitors?username=torvalds&hide_border=true" alt="Visitors Counter" height="120"/>
-
-Track profile views with a live visitor counter:
-
-```html
-<img src="https://gitlyy.vercel.app/api/visitors?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
 ---
 
-## Quick Examples
+### 5. Streak Card
 
-**Single Card (Recommended - All-in-One):**
-```markdown
-## 📊 GitHub Stats
+Current and longest contribution streaks with fire visual and progress bar.
 
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
+<img src="https://gitlyy.vercel.app/api/streak?username=torvalds&hide_border=true" alt="Streak Card"/>
+
+```html
+<img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-**Multiple Views:**
-```markdown
-## 🧑‍💻 My GitHub Stats
+---
 
-<!-- Comprehensive Dashboard -->
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
+### 6. Commits Ranking
 
-<!-- Contribution Activity Graph -->
-<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&layout=pulse&hide_border=true"/>
+Days ranked from highest to lowest commit count in descending order.
+
+<img src="https://gitlyy.vercel.app/api/commits?username=torvalds&hide_border=true" alt="Commits Ranking"/>
+
+```html
+<img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
-**Individual Cards:**
-```markdown
-<!-- Visitor Counter -->
-<img src="https://gitlyy.vercel.app/api/visitors?username=YOUR_USERNAME&hide_border=true"/>
+**Compact** (best day, active days, daily average):
+```html
+<img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
+```
 
-<!-- Total Coding Hours -->
-<img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&hide_border=true"/>
+---
 
-<!-- Master Dashboard -->
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+### 7. Activity Calendar
 
-<!-- Contribution Grid -->
-<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
+Year-at-a-glance contribution calendar showing all 12 months.
 
-<!-- Language Distribution -->
-<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/calendar?username=torvalds&hide_border=true" alt="Activity Calendar"/>
 
-<!-- PR Stats -->
+```html
+<img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&hide_border=true"/>
+```
+
+---
+
+### 8. Pull Request Stats
+
+PR count with per-repository breakdown and progress bars.
+
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=torvalds&hide_border=true" alt="PR Stats"/>
+
+```html
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&hide_border=true"/>
+```
+
+**Compact**:
+```html
 <img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
 
 ---
 
-## Auto-Refresh
+### 9. Working Hours
 
-Cards automatically refresh based on their data type. No manual action needed.
+Estimated total coding hours based on GitHub activity since account creation.
 
-- **Contributions, PR Stats, Languages**: Refresh every **30 minutes**
-- **Working Hours**: Refresh every **2 hours** (updates as new activity is detected)
-- **Visitor Counter**: Real-time updates
-- Data cached server-side
-- CDN caches data
-- Stale content served while refreshing in background
-- Each user's data cached separately (no conflicts)
+<img src="https://gitlyy.vercel.app/api/working-hours?username=torvalds&hide_border=true" alt="Working Hours"/>
+
+Calculation: `Total Contributions x 1.5 hours/commit`
+
+```html
+<img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&hide_border=true"/>
+```
 
 ---
 
-## Force Refresh
+### 10. Visitors Counter
 
-Add `&refresh=true` to force immediate data refresh:
+Live profile view counter.
 
+<img src="https://gitlyy.vercel.app/api/visitors?username=torvalds&hide_border=true" alt="Visitors"/>
+
+```html
+<img src="https://gitlyy.vercel.app/api/visitors?username=YOUR_USERNAME&hide_border=true"/>
 ```
-https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&refresh=true
-https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&refresh=true
-https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&refresh=true
+
+---
+
+## Quick Start
+
+Copy any card URL and replace `YOUR_USERNAME` with your GitHub username:
+
+```markdown
+## My GitHub Stats
+
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
 ```
+
+### Full README Example
+
+```markdown
+## GitHub Stats
+
+<img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&hide_border=true"/>
+```
+
+---
+
+## API Endpoints
+
+| Endpoint | Description | Layouts | Refresh |
+|----------|-------------|---------|---------|
+| `/api/master` | All-in-one dashboard | - | 30 min |
+| `/api/profile` | User profile info | - | 2 hours |
+| `/api/contribution` | Contribution heatmap | `default`, `compact`, `pulse` | 30 min |
+| `/api/languages` | Language distribution | `default`, `compact`, `donut` | 30 min |
+| `/api/streak` | Streak stats | - | 30 min |
+| `/api/commits` | Commits ranking | `default`, `compact` | 30 min |
+| `/api/calendar` | Activity calendar | - | 30 min |
+| `/api/pr-stats` | Pull request stats | `default`, `compact` | 30 min |
+| `/api/working-hours` | Estimated coding hours | - | 2 hours |
+| `/api/visitors` | Profile visitor counter | - | Real-time |
+
+---
+
+## Parameters
+
+All endpoints support these query parameters:
+
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `username` | GitHub username (required) | `torvalds` |
+| `theme` | Color theme | `dark`, `synthwave`, `radical` |
+| `hide_border` | Remove card border | `true` |
+| `layout` | Card layout variant | `compact`, `pulse`, `donut` |
+| `bg_color` | Background color (hex) | `010409` |
+| `title_color` | Title color (hex) | `58a6ff` |
+| `text_color` | Text color (hex) | `e6edf3` |
+| `border_color` | Border color (hex) | `30363d` |
+| `width` | Card width (master card) | `1000` |
+| `max_langs` | Max languages shown | `15` |
+| `refresh` | Force data refresh | `true` |
 
 ---
 
 ## Themes
 
-Add `&theme=NAME`:
+Add `&theme=NAME` to any card URL:
 
-`dark` `synthwave` `radical` `tokyonight` `dracula` `gruvbox` `monokai` `nord` `solarized_dark` `catppuccin` `github_dark` `highcontrast`
+| Theme | Preview Accent |
+|-------|---------------|
+| `dark` | Blue |
+| `synthwave` | Pink |
+| `radical` | Hot Pink |
+| `tokyonight` | Blue |
+| `dracula` | Purple |
+| `gruvbox` | Yellow |
+| `monokai` | Green |
+| `nord` | Cyan |
+| `solarized_dark` | Teal |
+| `catppuccin` | Lavender |
+| `github_dark` | Green |
+| `highcontrast` | Yellow |
 
 ```html
-<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&layout=compact&theme=synthwave&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&theme=synthwave&hide_border=true"/>
 ```
 
 ---
 
 ## Custom Colors
 
-`&bg_color=010409&title_color=58a6ff&text_color=e6edf3`
+Override any color with hex values (without `#`):
+
+```
+&bg_color=010409&title_color=58a6ff&text_color=e6edf3&border_color=30363d
+```
 
 ---
 
-## Parameters
+## Auto-Refresh
 
-| Param | Description | Example |
-|-------|-------------|---------|
-| `username` | GitHub username (required) | `torvalds` |
-| `theme` | Color theme | `dark` |
-| `hide_border` | Hide border | `true` |
-| `layout` | `compact` \/ `pulse` (contribution) \/ `donut` (languages) | `compact` |
-| `bg_color` | Background hex | `010409` |
-| `title_color` | Title color hex | `58a6ff` |
-| `text_color` | Text color hex | `e6edf3` |
-| `max_langs` | Max languages (lang card) | `15` |
-| `refresh` | Force refresh data | `true` |
+Cards automatically update based on data type:
+
+| Data | Cache Duration |
+|------|---------------|
+| Contributions, PRs, Languages, Commits, Streak, Calendar | 30 minutes |
+| Profile, Working Hours | 2 hours |
+| Visitors | Real-time |
+
+Data is cached server-side. CDN caches the response. Stale content is served while refreshing in the background.
+
+### Force Refresh
+
+Add `&refresh=true` to any URL to bypass the cache:
+
+```
+https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&refresh=true
+```
 
 ---
 
 ## How It Works
 
-- Anyone can use `https://gitlyy.vercel.app` - no setup
-- Each user cached separately for 30 minutes
-- Auto-refreshes when cache expires
-- No auth required
-- Unlimited users simultaneously
-
----
-
-## API Endpoints
-
-All endpoints return SVG images that auto-refresh. Replace `YOUR_USERNAME` with any GitHub username.
-
-### Available Endpoints
-
-| Endpoint | Purpose | Refresh Rate |
-|----------|---------|--------------|
-| `/api/pr-stats` | Pull request statistics | 30 min |
-| `/api/contribution` | Contribution graph | 30 min |
-| `/api/languages` | Language distribution | 30 min |
-| `/api/working-hours` | Total coding hours | 2 hours |
-| `/api/visitors` | Profile visitor counter | Real-time |
-| `/api/master` | All-in-one dashboard | 30 min |
-
-### Test Links
-
-Try these live links to verify everything is working:
-
-- **PR Stats**: https://gitlyy.vercel.app/api/pr-stats?username=torvalds&hide_border=true
-- **Contributions**: https://gitlyy.vercel.app/api/contribution?username=torvalds&hide_border=true
-- **Languages**: https://gitlyy.vercel.app/api/languages?username=torvalds&hide_border=true
-- **Working Hours**: https://gitlyy.vercel.app/api/working-hours?username=torvalds&hide_border=true
-- **Visitors**: https://gitlyy.vercel.app/api/visitors?username=torvalds&hide_border=true
-- **Master Card**: https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true&width=1000
-
-All endpoints support:
-- `&theme=NAME` - Apply color theme
-- `&hide_border=true` - Remove border
-- `&refresh=true` - Force data refresh
-- `&bg_color=HEX` - Custom background
-- `&title_color=HEX` - Custom title color
-- `&text_color=HEX` - Custom text color
+1. No authentication required - uses public GitHub API
+2. Each user's data is cached separately
+3. Auto-refreshes when cache expires
+4. Works for any public GitHub profile
+5. Zero dependencies - pure Node.js
 
 ---
 
 ## Self-Host
 
 1. Fork this repo
-2. Import at [vercel.com](https://vercel.com) (free)
+2. Import at [vercel.com](https://vercel.com) (free tier)
 3. Click Deploy
 
 ---

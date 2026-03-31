@@ -103,7 +103,7 @@ function generateLanguageCompactSVG(options) {
   }
 
   const topLangs = languages.slice(0, 5);
-  const cardWidth = 420;
+  const cardWidth = 460;
   const cardHeight = 120;
   const padX = 24;
   const barY = 52;
@@ -210,7 +210,7 @@ function generateLanguageDonutSVG(options) {
 }
 
 function generateNoLangDataSVG(username, colors, hideBorder) {
-  const cardWidth = 400;
+  const cardWidth = 460;
   const cardHeight = 100;
   const hideBorderAttr = hideBorder
     ? `rx="8"`

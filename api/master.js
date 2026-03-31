@@ -2,7 +2,7 @@
  * Master Card - Combines all stats into one card
  * GET /api/master?username=xxx&hide_border=true
  *
- * Displays: PR stats, languages, contributions, and repositories
+ * Displays: PR stats, languages, contributions, streaks, repositories, and activity
  */
 
 const { fetchUserPullRequests, fetchOpenPullRequests, groupPRsByRepo, fetchUserLanguages, fetchContributionData, fetchUserProfile } = require("../src/github");
@@ -12,7 +12,6 @@ const { getCache, setCache, clearCache } = require("../src/cache");
 
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 
-// In-memory visitor counter
 const visitorCounts = {};
 
 module.exports = async (req, res) => {
@@ -31,7 +30,6 @@ module.exports = async (req, res) => {
   try {
     const cacheKey = `master:${username.toLowerCase()}`;
 
-    // Force refresh if requested
     if (refresh === "true") {
       clearCache(cacheKey);
     }
@@ -60,6 +58,21 @@ module.exports = async (req, res) => {
         const totalContributions = contributionData.totalContributions || 0;
         const contributionDays = Array.isArray(contributionData.days) ? contributionData.days : [];
 
+        // Calculate streaks
+        const sortedDays = [...contributionDays].sort((a, b) => a.date.localeCompare(b.date));
+        let currentStreak = 0;
+        let longestStreak = 0;
+        let tempStreak = 0;
+
+        for (let i = sortedDays.length - 1; i >= 0; i--) {
+          if (sortedDays[i].count > 0) currentStreak++;
+          else break;
+        }
+        for (const day of sortedDays) {
+          if (day.count > 0) { tempStreak++; longestStreak = Math.max(longestStreak, tempStreak); }
+          else tempStreak = 0;
+        }
+
         data = {
           totalPRs: prs.length,
           openPRs: openPRCount,
@@ -68,6 +81,8 @@ module.exports = async (req, res) => {
           languages: languageArray,
           contributions: totalContributions,
           contributionDays,
+          currentStreak,
+          longestStreak,
           username,
         };
 
@@ -82,7 +97,6 @@ module.exports = async (req, res) => {
     let colors = getTheme(theme);
     colors = applyColorOverrides(colors, { bg_color, title_color, text_color, border_color });
 
-    // Get and increment visitor count
     const userKey = username.toLowerCase();
     if (!visitorCounts[userKey]) {
       visitorCounts[userKey] = 0;
@@ -98,6 +112,8 @@ module.exports = async (req, res) => {
       languages: data.languages,
       contributions: data.contributions,
       contributionDays: data.contributionDays,
+      currentStreak: data.currentStreak,
+      longestStreak: data.longestStreak,
       visitors: visitorCounts[userKey],
       colors,
       hideBorder: hide_border === "true",

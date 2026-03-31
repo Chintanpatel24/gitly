@@ -73,7 +73,7 @@ module.exports = async (req, res) => {
           repoCount: data.repoCount,
           colors,
           hideBorder: hide_border === "true",
-          cardWidth: parseInt(width) || 400,
+          cardWidth: parseInt(width) || 460,
         })
       : generatePRCardSVG({
           username: data.profileName,
@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
           openPRs: data.openPRs,
           colors,
           hideBorder: hide_border === "true",
-          cardWidth: parseInt(width) || 440,
+          cardWidth: parseInt(width) || 460,
         });
 
     res.status(200).send(svg);
