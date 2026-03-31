@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gitly - Custom GitHub Stats Cards</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#010409;color:#e6edf3;min-height:100vh}
+    .container{max-width:820px;margin:0 auto;padding:48px 20px}
+    .status{display:inline-flex;align-items:center;gap:8px;background:rgba(46,160,67,.1);border:1px solid rgba(46,160,67,.3);color:#3fb950;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:16px}
+    .dot{width:7px;height:7px;background:#3fb950;border-radius:50%;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    h1{color:#f0f6fc;font-size:36px;font-weight:700;margin-bottom:6px}
+    .sub{color:#8b949e;font-size:15px;margin-bottom:40px}
+    .section{margin-bottom:32px}
+    .label{color:#8b949e;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:10px}
+    .frame{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:20px;display:flex;justify-content:center;overflow-x:auto;cursor:pointer;transition:border-color .2s}
+    .frame:hover{border-color:#58a6ff}
+    .frame img{max-width:100%;height:auto;display:block}
+    .frame.open{cursor:zoom-out;border-color:#58a6ff}
+    /* Modal overlay */
+    .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:1000;justify-content:center;align-items:center;cursor:zoom-out}
+    .overlay.show{display:flex}
+    .overlay img{max-width:95%;max-height:95%;border-radius:8px;box-shadow:0 0 40px rgba(0,0,0,.5)}
+    /* Code section */
+    .code-section{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:24px;margin-top:32px}
+    .code-title{color:#f0f6fc;font-size:16px;font-weight:600;margin-bottom:16px}
+    .code-group{margin-bottom:16px}
+    .code-label{color:#8b949e;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+    .code-block{background:#010409;border:1px solid #21262d;border-radius:6px;padding:12px 14px;overflow-x:auto;position:relative}
+    .code-block code{color:#e6edf3;font-family:'SFMono-Regular',Consolas,monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+    .copy{position:absolute;top:6px;right:6px;background:#21262d;border:1px solid #30363d;color:#8b949e;padding:3px 8px;border-radius:4px;font-size:10px;cursor:pointer}
+    .copy:hover{background:#30363d;color:#e6edf3}
+    .themes{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .pill{background:#21262d;border:1px solid #30363d;padding:3px 10px;border-radius:14px;font-size:11px;color:#8b949e;font-family:monospace}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th{text-align:left;padding:8px 10px;color:#8b949e;font-size:10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #21262d}
+    td{padding:8px 10px;border-bottom:1px solid #21262d;font-size:12px;color:#c9d1d9}
+    td code{background:#1f2937;padding:2px 6px;border-radius:4px;font-size:11px;color:#58a6ff;font-family:monospace}
+    footer{margin-top:48px;padding-top:16px;border-top:1px solid #21262d;color:#484f58;font-size:11px;text-align:center}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="status"><span class="dot"></span>Gitly is live</div>
+  <h1>Gitly</h1>
+  <p class="sub">Custom GitHub stats cards for your README.<br>Click any card to view full-size.</p>
+
+  <!-- PR Compact -->
+  <div class="section">
+    <div class="label">Pull Request Stats &mdash; Compact</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/pr-stats?username=torvalds&layout=compact" alt="PR Stats Compact" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- PR Full -->
+  <div class="section">
+    <div class="label">Pull Request Stats &mdash; Full</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/pr-stats?username=torvalds" alt="PR Stats Full" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Contribution Grid -->
+  <div class="section">
+    <div class="label">Contribution Numbers &mdash; Grid</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/contribution?username=torvalds" alt="Contribution Grid" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Contribution Compact -->
+  <div class="section">
+    <div class="label">Contribution Numbers &mdash; Compact</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/contribution?username=torvalds&layout=compact" alt="Contribution Compact" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages Full -->
+  <div class="section">
+    <div class="label">Language Usage &mdash; Full</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages?username=torvalds" alt="Languages" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages Compact -->
+  <div class="section">
+    <div class="label">Language Usage &mdash; Compact</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages?username=torvalds&layout=compact" alt="Languages Compact" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Working Hours -->
+  <div class="section">
+    <div class="label">Total Coding Hours</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/working-hours?username=torvalds" alt="Working Hours" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Overview -->
+  <div class="section">
+    <div class="label">Overview</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/overview?username=torvalds" alt="Overview" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Profile Card -->
+  <div class="section">
+    <div class="label">Profile</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/profile?username=torvalds" alt="Profile Card" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Streak Card -->
+  <div class="section">
+    <div class="label">Streak</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/streak?username=torvalds" alt="Streak Card" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages Donut -->
+  <div class="section">
+    <div class="label">Languages</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages?username=torvalds&layout=donut" alt="Languages Donut" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages by Repos -->
+  <div class="section">
+    <div class="label">Most Used Languages</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages/repos?username=torvalds" alt="Languages by Repos" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages by Commits -->
+  <div class="section">
+    <div class="label">Languages by Activity</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages/commits?username=torvalds" alt="Languages by Commits" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Commits Ranking -->
+  <div class="section">
+    <div class="label">Commits &mdash; Top Days</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/commits?username=torvalds" alt="Commits Ranking" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Usage -->
+  <div class="code-section">
+    <div class="code-title">Copy &amp; Paste</div>
+    <div class="code-group">
+      <div class="code-label">PR Stats</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Contribution Numbers</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Languages</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Most Used Languages</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/languages/repos?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Languages by Activity</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/languages/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Working Hours</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Commits Ranking</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Streak</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Profile</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Overview</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/overview?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">All Cards</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&amp;layout=donut&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/overview?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+
+&lt;img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+  </div>
+
+  <!-- Params -->
+  <div class="code-section">
+    <div class="code-title">Parameters</div>
+    <table>
+      <thead><tr><th>Param</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><code>username</code></td><td>GitHub username (required)</td><td><code>torvalds</code></td></tr>
+        <tr><td><code>theme</code></td><td>Color theme</td><td><code>dark</code></td></tr>
+        <tr><td><code>hide_border</code></td><td>Hide border</td><td><code>true</code></td></tr>
+        <tr><td><code>layout</code></td><td><code>compact</code> for summary</td><td><code>compact</code></td></tr>
+        <tr><td><code>bg_color</code></td><td>Background hex</td><td><code>010409</code></td></tr>
+        <tr><td><code>title_color</code></td><td>Title hex</td><td><code>58a6ff</code></td></tr>
+        <tr><td><code>max_langs</code></td><td>Max languages (lang card)</td><td><code>15</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Themes -->
+  <div class="code-section">
+    <div class="code-title">Themes</div>
+    <div class="themes">
+      <span class="pill">dark</span><span class="pill">synthwave</span><span class="pill">radical</span><span class="pill">tokyonight</span><span class="pill">dracula</span><span class="pill">gruvbox</span><span class="pill">monokai</span><span class="pill">nord</span><span class="pill">solarized_dark</span><span class="pill">catppuccin</span><span class="pill">github_dark</span><span class="pill">highcontrast</span>
+    </div>
+  </div>
+
+  <footer>Data cached 40 min &bull; No auth &bull; Real GitHub data &bull; <a href="https://github.com/Chintanpatel24/gitlyy" style="color:#58a6ff;text-decoration:none">Created by Chintan Patel</a></footer>
+</div>
+
+<!-- Modal overlay -->
+<div class="overlay" id="overlay" onclick="closeModal()">
+  <img id="overlay-img" src="" alt="Full size card"/>
+</div>
+
+<script>
+function openModal(frame) {
+  const img = frame.querySelector('img');
+  const overlay = document.getElementById('overlay');
+  const overlayImg = document.getElementById('overlay-img');
+  overlayImg.src = img.src;
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function cp(btn) {
+  const code = btn.parentElement.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>

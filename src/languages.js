@@ -1,0 +1,90 @@
+/**
+ * GitHub language colors - official colors from GitHub.
+ * https://github.com/github/linguist/blob/master/lib/linguist/languages.yml
+ */
+const languageColors = {
+  JavaScript: "f1e05a",
+  TypeScript: "3178c6",
+  Python: "3572A5",
+  Java: "b07219",
+  "C++": "f34b7d",
+  C: "555555",
+  "C#": "178600",
+  Go: "00ADD8",
+  Rust: "dea584",
+  Ruby: "701516",
+  PHP: "4F5D95",
+  Swift: "F05138",
+  Kotlin: "A97BFF",
+  Dart: "00B4AB",
+  Scala: "c22d40",
+  R: "198CE7",
+  Lua: "000080",
+  Perl: "0298c3",
+  Haskell: "5e5086",
+  Elixir: "6e4a7e",
+  Clojure: "db5855",
+  Erlang: "B83998",
+  OCaml: "3be133",
+  FSharp: "b845fc",
+  Vue: "41b883",
+  Svelte: "ff3e00",
+  HTML: "e34c26",
+  CSS: "563d7c",
+  SCSS: "c6538c",
+  Shell: "89e051",
+  PowerShell: "012456",
+  Dockerfile: "384d54",
+  SQL: "e38c00",
+  JSON: "292929",
+  YAML: "cb171e",
+  XML: "0060ac",
+  Markdown: "083fa1",
+  Tex: "3D6117",
+  Assembly: "6E4C13",
+  VimScript: "199f4b",
+  EmacsLisp: "c065db",
+  Scala: "c22d40",
+  Roff: "ecdebe",
+  Makefile: "427819",
+  CMake: "DA3434",
+  Batchfile: "C1F12E",
+  Nix: "7e7eff",
+  Zig: "ec915c",
+  "Jupyter Notebook": "DA5B0B",
+  MATLAB: "e16737",
+  Fortran: "4d41b1",
+  Groovy: "e69f56",
+  Dart: "00B4AB",
+  V: "4f87c4",
+  Nim: "ffc200",
+  Crystal: "000100",
+  "Objective-C": "438eff",
+  "Objective-C++": "6866fb",
+  Hack: "878787",
+  Puppet: "302B6D",
+  Ansible: "1A1A1A",
+  Terraform: "7B42BC",
+  HCL: "844FBA",
+  "Visual Basic": "945db7",
+  Processing: "0096D8",
+  Arduino: "bd79d1",
+  GDScript: "355570",
+  Glsl: "5686a5",
+  Solidity: "AA6746",
+  Vyper: "2955a0",
+  Cairo: "ff4500",
+  Move: "4a137a",
+  Mojo: "ff4c1f",
+};
+
+/**
+ * Get color for a language, with fallback.
+ * @param {string} language
+ * @returns {string} hex color without #
+ */
+function getLanguageColor(language) {
+  return languageColors[language] || "8b8b8b";
+}
+
+module.exports = { languageColors, getLanguageColor };

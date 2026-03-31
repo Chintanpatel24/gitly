@@ -1,5 +1,3 @@
-<p align="center">
-  <img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true&width=1000" alt="Gitly Master Card" width="100%"/>
 </p>
 
 <h1 align="center">Gitly</h1>
@@ -21,19 +19,7 @@
 
 ## All Cards
 
-### 1. Master Dashboard
-
-All-in-one stats card with visitors, PRs, repos, contributions, streaks, top repos, top languages, 30-day trend, and activity heatmap.
-
-<img src="https://gitlyy.vercel.app/api/master?username=torvalds&hide_border=true" alt="Master Card" width="100%"/>
-
-```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true&width=1000"/>
-```
-
----
-
-### 2. Profile Card
+### 1. Profile Card
 
 Shows user info: avatar, name, bio, join date, repos, followers, and following.
 
@@ -45,7 +31,7 @@ Shows user info: avatar, name, bio, join date, repos, followers, and following.
 
 ---
 
-### 3. Contribution Numbers
+### 2. Contribution Numbers
 
 GitHub-style contribution heatmap with daily commit counts.
 
@@ -67,7 +53,7 @@ GitHub-style contribution heatmap with daily commit counts.
 
 ---
 
-### 4. Language Usage
+### 3. Language Usage
 
 Horizontal stacked bar of languages with percentages using GitHub's official colors.
 
@@ -89,7 +75,7 @@ Horizontal stacked bar of languages with percentages using GitHub's official col
 
 ---
 
-### 5. Streak Card
+### 4. Streak Card
 
 Current and longest contribution streaks with fire visual and progress bar.
 
@@ -101,7 +87,7 @@ Current and longest contribution streaks with fire visual and progress bar.
 
 ---
 
-### 6. Commits Ranking
+### 5. Commits Ranking
 
 Days ranked from highest to lowest commit count in descending order.
 
@@ -118,19 +104,7 @@ Days ranked from highest to lowest commit count in descending order.
 
 ---
 
-### 7. Activity Calendar
-
-Year-at-a-glance contribution calendar showing all 12 months.
-
-<img src="https://gitlyy.vercel.app/api/calendar?username=torvalds&hide_border=true" alt="Activity Calendar"/>
-
-```html
-<img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&hide_border=true"/>
-```
-
----
-
-### 8. Pull Request Stats
+### 6. Pull Request Stats
 
 PR count with per-repository breakdown and progress bars.
 
@@ -147,7 +121,7 @@ PR count with per-repository breakdown and progress bars.
 
 ---
 
-### 9. Working Hours
+### 7. Working Hours
 
 Estimated total coding hours based on GitHub activity since account creation.
 
@@ -161,14 +135,14 @@ Calculation: `Total Contributions x 1.5 hours/commit`
 
 ---
 
-### 10. Visitors Counter
+### 8. Overview Card
 
-Live profile view counter.
+Shows total stats: Stars, Commits, PRs, Issues, Contributed to.
 
-<img src="https://gitlyy.vercel.app/api/visitors?username=torvalds&hide_border=true" alt="Visitors"/>
+<img src="https://gitlyy.vercel.app/api/overview?username=torvalds&hide_border=true" alt="Overview Card"/>
 
 ```html
-<img src="https://gitlyy.vercel.app/api/visitors?username=YOUR_USERNAME&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/overview?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
 ---
@@ -180,7 +154,7 @@ Copy any card URL and replace `YOUR_USERNAME` with your GitHub username:
 ```markdown
 ## My GitHub Stats
 
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
 ### Full README Example
@@ -190,17 +164,15 @@ Copy any card URL and replace `YOUR_USERNAME` with your GitHub username:
 
 <img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&hide_border=true"/>
 
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&hide_border=true"/>
-
 <img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&hide_border=true"/>
 
 <img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&hide_border=true"/>
 
 <img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&layout=donut&hide_border=true"/>
 
-<img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&hide_border=true"/>
-
 <img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&hide_border=true"/>
+
+<img src="https://gitlyy.vercel.app/api/pr-stats?username=YOUR_USERNAME&hide_border=true"/>
 ```
 
 ---
@@ -209,16 +181,14 @@ Copy any card URL and replace `YOUR_USERNAME` with your GitHub username:
 
 | Endpoint | Description | Layouts | Refresh |
 |----------|-------------|---------|---------|
-| `/api/master` | All-in-one dashboard | - | 30 min |
 | `/api/profile` | User profile info | - | 2 hours |
 | `/api/contribution` | Contribution heatmap | `default`, `compact`, `pulse` | 30 min |
 | `/api/languages` | Language distribution | `default`, `compact`, `donut` | 30 min |
 | `/api/streak` | Streak stats | - | 30 min |
 | `/api/commits` | Commits ranking | `default`, `compact` | 30 min |
-| `/api/calendar` | Activity calendar | - | 30 min |
 | `/api/pr-stats` | Pull request stats | `default`, `compact` | 30 min |
 | `/api/working-hours` | Estimated coding hours | - | 2 hours |
-| `/api/visitors` | Profile visitor counter | - | Real-time |
+| `/api/overview` | Overall stats summary | - | 30 min |
 
 ---
 
@@ -236,7 +206,7 @@ All endpoints support these query parameters:
 | `title_color` | Title color (hex) | `58a6ff` |
 | `text_color` | Text color (hex) | `e6edf3` |
 | `border_color` | Border color (hex) | `30363d` |
-| `width` | Card width (master card) | `1000` |
+| `width` | Card width (profile card) | `1000` |
 | `max_langs` | Max languages shown | `15` |
 | `refresh` | Force data refresh | `true` |
 
@@ -262,7 +232,7 @@ Add `&theme=NAME` to any card URL:
 | `highcontrast` | Yellow |
 
 ```html
-<img src="https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&theme=synthwave&hide_border=true"/>
+<img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&theme=synthwave&hide_border=true"/>
 ```
 
 ---
@@ -283,9 +253,8 @@ Cards automatically update based on data type:
 
 | Data | Cache Duration |
 |------|---------------|
-| Contributions, PRs, Languages, Commits, Streak, Calendar | 30 minutes |
+| Contributions, PRs, Languages, Commits, Streak, Overview | 30 minutes |
 | Profile, Working Hours | 2 hours |
-| Visitors | Real-time |
 
 Data is cached server-side. CDN caches the response. Stale content is served while refreshing in the background.
 
@@ -294,7 +263,7 @@ Data is cached server-side. CDN caches the response. Stale content is served whi
 Add `&refresh=true` to any URL to bypass the cache:
 
 ```
-https://gitlyy.vercel.app/api/master?username=YOUR_USERNAME&refresh=true
+https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&refresh=true
 ```
 
 ---
