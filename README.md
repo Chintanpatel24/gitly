@@ -1,6 +1,10 @@
 </p>
 
-<h1 align="center">Gitly</h1>
+<div align=center>
+  
+![title image](image/gitlyy.png)
+
+</div>
 
 <p align="center">
   Custom GitHub stats cards for your README. Real data. No auth required.
