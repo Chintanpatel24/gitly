@@ -111,6 +111,9 @@ II. **Compact** (total, current streak, longest streak):
 
  III. **Compact** (best day, active days, daily average):
 
+ <img src="images/10.png">
+
+
 ```html
 <img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&layout=compact&hide_border=true"/>
 ```
@@ -160,9 +163,9 @@ Where:
 
 ### 8. Overview Card
 
-Shows total stats: Stars, Commits, PRs, Issues, Contributed to.
+- Shows total stats: Stars, Commits, PRs, Issues, Contributed to.
 
-<img src="https://gitlyy.vercel.app/api/overview?username=torvalds&hide_border=true" alt="Overview Card"/>
+<img src="images/14.png">
 
 ```html
 <img src="https://gitlyy.vercel.app/api/overview?username=YOUR_USERNAME&hide_border=true"/>
