@@ -1,17 +1,7 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "/api/pr-stats", "dest": "/api/pr-stats.js" },
-    { "src": "/api/contribution", "dest": "/api/contribution.js" },
-    { "src": "/api/languages/repos", "dest": "/api/languages-repos.js" },
-    { "src": "/api/languages/commits", "dest": "/api/languages-commits.js" },
-    { "src": "/api/languages", "dest": "/api/languages.js" },
-    { "src": "/api/master", "dest": "/api/master.js" },
-    { "src": "/api/working-hours", "dest": "/api/working-hours.js" },
-    { "src": "/api/visitors", "dest": "/api/visitors.js" },
-    { "src": "/api/commits", "dest": "/api/commits.js" },
-    { "src": "/api/streak", "dest": "/api/streak.js" },
-    { "src": "/api/profile", "dest": "/api/profile.js" },
-    { "src": "/api/overview", "dest": "/api/overview.js" }
+  "rewrites": [
+    { "source": "/api/languages/repos", "destination": "/api/languages-repos" },
+    { "source": "/api/languages/commits", "destination": "/api/languages-commits" }
   ]
 }
