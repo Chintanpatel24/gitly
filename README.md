@@ -89,12 +89,17 @@ Current and longest contribution streaks with fire visual and progress bar.
 
 ### 5. Commits Ranking
 
-Days ranked from highest to lowest commit count in descending order.
+PR-style ranked list of days from highest to lowest commit count, with large green square markers and count bars.
 
 <img src="https://gitlyy.vercel.app/api/commits?username=torvalds&hide_border=true" alt="Commits Ranking"/>
 
 ```html
 <img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&hide_border=true"/>
+```
+
+**Custom width**:
+```html
+<img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&width=520&hide_border=true"/>
 ```
 
 **Compact** (best day, active days, daily average):
@@ -213,7 +218,7 @@ All endpoints support these query parameters:
 | `title_color` | Title color (hex) | `58a6ff` |
 | `text_color` | Text color (hex) | `e6edf3` |
 | `border_color` | Border color (hex) | `30363d` |
-| `width` | Card width (profile card) | `1000` |
+| `width` | Card width (supported by profile, PR stats, commits) | `520` |
 | `max_langs` | Max languages shown | `15` |
 | `refresh` | Force data refresh | `true` |
 

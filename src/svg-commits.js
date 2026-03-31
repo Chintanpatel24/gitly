@@ -23,15 +23,11 @@ function generateCommitsRankingSVG(options) {
   const titleColor = (colors && colors.title_color) || "e6edf3";
 
   const maxCount = activeDays[0].count;
-  const boxSize = 32;
-  const gap = 6;
+  const maxShow = Math.min(activeDays.length, 12);
+  const rowH = 30;
   const pad = 24;
-  const hdr = 60;
-  const cols = 10;
-  const rows = Math.ceil(activeDays.length / cols);
-  const gridWidth = cols * (boxSize + gap);
-  const gridHeight = rows * (boxSize + gap);
-  const cardHeight = hdr + gridHeight + 16;
+  const hdr = 80;
+  const cardHeight = hdr + maxShow * rowH + 8;
 
   const formatDate = (dateStr) => {
     const d = new Date(`${dateStr}T00:00:00`);
@@ -39,26 +35,37 @@ function generateCommitsRankingSVG(options) {
     return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
   };
 
-  let boxes = "";
-  activeDays.forEach((day, i) => {
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const x = pad + col * (boxSize + gap);
-    const y = hdr + row * (boxSize + gap);
-    const opacity = Math.max(0.15, Math.min(1, (day.count / maxCount) * 0.95));
-    boxes += `<g><rect x="${x}" y="${y}" width="${boxSize}" height="${boxSize}" rx="6" fill="#${accentColor}" opacity="${opacity}"/><rect x="${x}" y="${y}" width="${boxSize}" height="${boxSize}" rx="6" fill="none" stroke="#e6edf3" stroke-width="0.8" opacity="0.12"/><title>${formatDate(day.date)}: ${day.count} commits</title></g>`;
+  let rows = "";
+  activeDays.slice(0, maxShow).forEach((day, i) => {
+    const y = hdr + i * rowH;
+    const opacity = Math.max(0.2, Math.min(1, day.count / maxCount));
+    const barWidth = Math.max(8, Math.min(100, (day.count / maxCount) * 100));
+    rows += `<g transform="translate(0,${y})">
+      <rect width="${cardWidth}" height="${rowH}" fill="#e6edf3" opacity="${i % 2 === 0 ? ".02" : "0"}"/>
+      <rect x="${pad}" y="8" width="14" height="14" rx="3" fill="#${accentColor}" opacity="${opacity}"/>
+      <rect x="${pad}" y="8" width="14" height="14" rx="3" fill="none" stroke="#e6edf3" stroke-width="0.7" opacity=".2"/>
+      <text x="${pad + 24}" y="20" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="12" fill="#c9d1d9">${escapeXml(formatDate(day.date))}</text>
+      <rect x="${cardWidth - pad - 112}" y="9" width="74" height="12" rx="6" fill="#30363d"/>
+      <rect x="${cardWidth - pad - 112}" y="9" width="${barWidth * 0.74}" height="12" rx="6" fill="#${accentColor}" opacity=".55"/>
+      <text x="${cardWidth - pad - 12}" y="20" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#${accentColor}">${day.count}</text>
+    </g>`;
   });
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(cardWidth, pad * 2 + gridWidth)}" height="${cardHeight}" viewBox="0 0 ${Math.max(cardWidth, pad * 2 + gridWidth)} ${cardHeight}">
+  if (activeDays.length > maxShow) {
+    rows += `<text x="${cardWidth / 2}" y="${hdr + maxShow * rowH + 6}" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e" opacity=".5">+${activeDays.length - maxShow} more</text>`;
+  }
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
   <style>.t{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.n{font:700 18px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
-  <rect width="${Math.max(cardWidth, pad * 2 + gridWidth)}" height="${cardHeight}" fill="#0d1117" ${hba}/>
-  <rect width="${Math.max(cardWidth, pad * 2 + gridWidth)}" height="3" fill="#${accentColor}" rx="8"/>
+  <rect width="${cardWidth}" height="${cardHeight}" fill="#0d1117" ${hba}/>
+  <rect width="${cardWidth}" height="3" fill="#${accentColor}" rx="8"/>
   <circle cx="${pad + 6}" cy="22" r="5" fill="#${accentColor}" opacity=".2"/><circle cx="${pad + 6}" cy="22" r="2.5" fill="#${accentColor}"/>
-  <text x="${pad + 16}" y="26" class="t" fill="#${titleColor}">Commits (${activeDays.length} active days)</text>
-  <rect x="${Math.max(cardWidth, pad * 2 + gridWidth) - pad - 80}" y="10" width="80" height="28" rx="12" fill="#${accentColor}" opacity=".12"/>
-  <text x="${Math.max(cardWidth, pad * 2 + gridWidth) - pad - 40}" y="29" text-anchor="middle" class="n" fill="#${accentColor}">${totalContributions}</text>
-  <line x1="${pad}" y1="${hdr - 4}" x2="${Math.max(cardWidth, pad * 2 + gridWidth) - pad}" y2="${hdr - 4}" stroke="#30363d" stroke-width=".5"/>
-  ${boxes}
+  <text x="${pad + 16}" y="26" class="t" fill="#${titleColor}">Commits (Highest to Lowest)</text>
+  <text x="${pad}" y="48" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">${activeDays.length} active days</text>
+  <rect x="${cardWidth - pad - 80}" y="10" width="80" height="28" rx="12" fill="#${accentColor}" opacity=".12"/>
+  <text x="${cardWidth - pad - 40}" y="29" text-anchor="middle" class="n" fill="#${accentColor}">${totalContributions}</text>
+  <line x1="${pad}" y1="${hdr - 4}" x2="${cardWidth - pad}" y2="${hdr - 4}" stroke="#30363d" stroke-width=".5"/>
+  ${rows}
 </svg>`;
 }
 
