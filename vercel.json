@@ -1,9 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/**/*.js", "use": "@vercel/node" },
-    { "src": "public/**", "use": "@vercel/static" }
-  ],
   "routes": [
     { "src": "/api/pr-stats", "dest": "/api/pr-stats.js" },
     { "src": "/api/contribution", "dest": "/api/contribution.js" },
@@ -16,8 +12,6 @@
     { "src": "/api/commits", "dest": "/api/commits.js" },
     { "src": "/api/streak", "dest": "/api/streak.js" },
     { "src": "/api/profile", "dest": "/api/profile.js" },
-    { "src": "/api/overview", "dest": "/api/overview.js" },
-    { "src": "/", "dest": "/public/index.html" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/api/overview", "dest": "/api/overview.js" }
   ]
 }
