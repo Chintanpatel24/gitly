@@ -59,10 +59,8 @@ function generateMasterCardSVG(options) {
 
   <!-- Title bar -->
   <g transform="translate(${pad},16)">
-    <rect width="36" height="36" rx="8" fill="#${accentColor}" opacity=".15"/>
-    <text x="18" y="25" text-anchor="middle" font-size="20">&#x1F4CA;</text>
-    <text x="46" y="22" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#${titleColor}">${escapeXml(username)}</text>
-    <text x="46" y="38" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">Master Dashboard</text>
+    <text x="0" y="22" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#${titleColor}">${escapeXml(username)}</text>
+    <text x="0" y="38" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">Dashboard</text>
   </g>
 
   <!-- Badge: total contributions -->
@@ -74,12 +72,12 @@ function generateMasterCardSVG(options) {
 
   // --- STAT CARDS (6 stats in a row) ---
   const stats = [
-    { label: "Visitors", value: visitors, color: accentColor, icon: "\u{1F441}" },
-    { label: "Total PRs", value: totalPRs, color: accentColor, icon: "\u{1F50D}" },
-    { label: "Open PRs", value: openPRs, color: "f85149", icon: "\u{1F6A9}" },
-    { label: "Repos", value: repoCount, color: "1f6feb", icon: "\u{1F4C1}" },
-    { label: "Cur. Streak", value: currentStreak + "d", color: "f97316", icon: "\u{1F525}" },
-    { label: "Best Streak", value: longestStreak + "d", color: "eab308", icon: "\u{2B50}" },
+    { label: "Visitors", value: visitors, color: accentColor },
+    { label: "Total PRs", value: totalPRs, color: accentColor },
+    { label: "Open PRs", value: openPRs, color: "f85149" },
+    { label: "Repos", value: repoCount, color: "1f6feb" },
+    { label: "Cur. Streak", value: currentStreak + "d", color: "f97316" },
+    { label: "Best Streak", value: longestStreak + "d", color: "eab308" },
   ];
 
   const statGap = 10;
@@ -92,9 +90,8 @@ function generateMasterCardSVG(options) {
     svg += `<g transform="translate(${x},72)">
       <rect width="${statW}" height="${statH}" rx="10" fill="#${s.color}" opacity=".08"/>
       <rect width="${statW}" height="${statH}" rx="10" fill="none" stroke="#${s.color}" stroke-opacity=".15" stroke-width="1"/>
-      <text x="${statW / 2}" y="32" text-anchor="middle" font-size="16">${s.icon}</text>
-      <text x="${statW / 2}" y="52" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#${s.color}">${s.value}</text>
-      <text x="${statW / 2}" y="68" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">${s.label}</text>
+      <text x="${statW / 2}" y="38" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="24" font-weight="700" fill="#${s.color}">${s.value}</text>
+      <text x="${statW / 2}" y="62" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">${s.label}</text>
     </g>`;
   });
 

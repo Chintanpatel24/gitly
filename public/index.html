@@ -111,9 +111,17 @@
     </div>
   </div>
 
+  <!-- Overview -->
+  <div class="section">
+    <div class="label">Overview</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/overview?username=torvalds" alt="Overview" loading="lazy"/>
+    </div>
+  </div>
+
   <!-- Profile Card -->
   <div class="section">
-    <div class="label">Profile Card</div>
+    <div class="label">Profile</div>
     <div class="frame" onclick="openModal(this)">
       <img src="/api/profile?username=torvalds" alt="Profile Card" loading="lazy"/>
     </div>
@@ -121,23 +129,39 @@
 
   <!-- Streak Card -->
   <div class="section">
-    <div class="label">Streak Card</div>
+    <div class="label">Streak</div>
     <div class="frame" onclick="openModal(this)">
       <img src="/api/streak?username=torvalds" alt="Streak Card" loading="lazy"/>
     </div>
   </div>
 
-  <!-- Activity Calendar -->
+  <!-- Languages Donut -->
   <div class="section">
-    <div class="label">Activity Calendar</div>
+    <div class="label">Languages</div>
     <div class="frame" onclick="openModal(this)">
-      <img src="/api/calendar?username=torvalds" alt="Activity Calendar" loading="lazy"/>
+      <img src="/api/languages?username=torvalds&layout=donut" alt="Languages Donut" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages by Repos -->
+  <div class="section">
+    <div class="label">Most Used Languages</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages/repos?username=torvalds" alt="Languages by Repos" loading="lazy"/>
+    </div>
+  </div>
+
+  <!-- Languages by Commits -->
+  <div class="section">
+    <div class="label">Languages by Activity</div>
+    <div class="frame" onclick="openModal(this)">
+      <img src="/api/languages/commits?username=torvalds" alt="Languages by Commits" loading="lazy"/>
     </div>
   </div>
 
   <!-- Commits Ranking -->
   <div class="section">
-    <div class="label">Commits Ranking &mdash; Top Days</div>
+    <div class="label">Commits &mdash; Top Days</div>
     <div class="frame" onclick="openModal(this)">
       <img src="/api/commits?username=torvalds" alt="Commits Ranking" loading="lazy"/>
     </div>
@@ -159,6 +183,14 @@
       <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>
     <div class="code-group">
+      <div class="code-label">Most Used Languages</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/languages/repos?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
+      <div class="code-label">Languages by Activity</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/languages/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+    </div>
+    <div class="code-group">
       <div class="code-label">Working Hours</div>
       <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>
@@ -175,8 +207,8 @@
       <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/profile?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>
     <div class="code-group">
-      <div class="code-label">Activity Calendar</div>
-      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
+      <div class="code-label">Overview</div>
+      <div class="code-block"><button class="copy" onclick="cp(this)">Copy</button><code>&lt;img src="https://gitlyy.vercel.app/api/overview?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>
     <div class="code-group">
       <div class="code-label">All Cards</div>
@@ -186,11 +218,11 @@
 
 &lt;img src="https://gitlyy.vercel.app/api/contribution?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
 
-&lt;img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+&lt;img src="https://gitlyy.vercel.app/api/languages?username=YOUR_USERNAME&amp;layout=donut&amp;hide_border=true"/&gt;
 
 &lt;img src="https://gitlyy.vercel.app/api/streak?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
 
-&lt;img src="https://gitlyy.vercel.app/api/calendar?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
+&lt;img src="https://gitlyy.vercel.app/api/overview?username=YOUR_USERNAME&amp;hide_border=true"/&gt;
 
 &lt;img src="https://gitlyy.vercel.app/api/commits?username=YOUR_USERNAME&amp;hide_border=true"/&gt;</code></div>
     </div>

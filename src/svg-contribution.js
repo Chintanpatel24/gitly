@@ -30,10 +30,10 @@ function getContributionColorForDay(day, maxCount) {
 }
 
 function getCellSizeForCount(count, baseCellSize) {
-  if (count >= 150) return baseCellSize + 16;
-  if (count >= 100) return baseCellSize + 12;
-  if (count >= 80) return baseCellSize + 8;
-  if (count >= 50) return baseCellSize + 4;
+  if (count >= 150) return baseCellSize + 20;
+  if (count >= 100) return baseCellSize + 14;
+  if (count >= 80) return baseCellSize + 10;
+  if (count >= 50) return baseCellSize + 6;
   return baseCellSize;
 }
 
@@ -48,10 +48,10 @@ function isLightHexColor(hex) {
 }
 
 function getCountFontSize(count, boxSize) {
-  if (count > 999) return Math.max(8, boxSize * 0.38);
-  if (count > 99) return Math.max(8.8, boxSize * 0.48);
-  if (count > 9) return Math.max(9.5, boxSize * 0.56);
-  return Math.max(10, boxSize * 0.6);
+  if (count > 999) return Math.max(11, boxSize * 0.42);
+  if (count > 99) return Math.max(12, boxSize * 0.50);
+  if (count > 9) return Math.max(13, boxSize * 0.58);
+  return Math.max(14, boxSize * 0.62);
 }
 
 /**
@@ -59,21 +59,21 @@ function getCountFontSize(count, boxSize) {
  * Layout: GitHub-like weekly columns (left->right) and weekday rows (top->bottom).
  */
 function generateContributionSVG(options) {
-  const { username, days, totalContributions, colors, hideBorder, title } = options;
+  const { days, totalContributions, colors, hideBorder } = options;
 
   if (!days || days.length === 0) {
-    return noDataSVG(username, hideBorder);
+    return noDataSVG("", hideBorder);
   }
 
   const maxCount = Math.max(...days.map((d) => d.count), 1);
 
-  const baseCellSize = 16;
+  const baseCellSize = 24;
   const maxCellSize = getCellSizeForCount(150, baseCellSize);
-  const cellGap = 4;
+  const cellGap = 6;
   const cellStep = maxCellSize + cellGap;
-  const padX = 20;
-  const padY = 20;
-  const headerHeight = 54;
+  const padX = 24;
+  const padY = 24;
+  const headerHeight = 60;
 
   const sortedDays = [...days].sort((a, b) => a.date.localeCompare(b.date));
   const firstDate = new Date(`${sortedDays[0].date}T00:00:00`);
@@ -88,17 +88,16 @@ function generateContributionSVG(options) {
   const weekCount = Math.max(1, Math.ceil(totalDays / 7));
   const weekdayRowCount = 7;
 
-  const weekdayLabelW = 22;
+  const weekdayLabelW = 28;
   const gridStartX = padX + weekdayLabelW;
   const gridStartY = headerHeight + padY;
 
   const gridWidth = weekCount * cellStep;
   const gridHeight = weekdayRowCount * cellStep;
-  const cardWidth = Math.max(gridStartX + gridWidth + padX, 600);
-  const cardHeight = headerHeight + gridHeight + padY + 40;
+  const cardWidth = Math.max(gridStartX + gridWidth + padX, 700);
+  const cardHeight = headerHeight + gridHeight + padY + 44;
 
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
-  const displayTitle = title || `${username}'s Contributions`;
 
   // Generate cells in GitHub's week-column layout.
   let cells = "";
@@ -114,7 +113,7 @@ function generateContributionSVG(options) {
     const x = slotX + (maxCellSize - dynamicCellSize) / 2;
     const y = slotY + (maxCellSize - dynamicCellSize) / 2;
 
-    cells += `<rect x="${x}" y="${y}" width="${dynamicCellSize}" height="${dynamicCellSize}" rx="2" fill="#${color}"><title>${sortedDays[i].date}: ${sortedDays[i].count}</title></rect>`;
+    cells += `<rect x="${x}" y="${y}" width="${dynamicCellSize}" height="${dynamicCellSize}" rx="3" fill="#${color}"><title>${sortedDays[i].date}: ${sortedDays[i].count}</title></rect>`;
 
     const fs = getCountFontSize(sortedDays[i].count, dynamicCellSize);
     const tc = sortedDays[i].count === 0 ? "8b949e" : isLightHexColor(color) ? "0d1117" : "e6edf3";
@@ -131,7 +130,7 @@ function generateContributionSVG(options) {
     weekDate.setDate(startSunday.getDate() + c * 7);
     const month = weekDate.getMonth();
     if (month !== prevMonth) {
-      monthLabels += `<text x="${gridStartX + c * cellStep}" y="${gridStartY - 8}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="9" fill="#8b949e">${monthNames[month]}</text>`;
+      monthLabels += `<text x="${gridStartX + c * cellStep}" y="${gridStartY - 10}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">${monthNames[month]}</text>`;
       prevMonth = month;
     }
   }
@@ -144,28 +143,28 @@ function generateContributionSVG(options) {
   ]
     .map(({ row, label }) => {
       const y = gridStartY + row * cellStep + maxCellSize / 2 + 4;
-      return `<text x="${gridStartX - 8}" y="${y}" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">${label}</text>`;
+      return `<text x="${gridStartX - 10}" y="${y}" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">${label}</text>`;
     })
     .join("");
 
   // Legend
   const legendX = gridStartX;
-  const legendY = gridStartY + gridHeight + 24;
+  const legendY = gridStartY + gridHeight + 28;
   const legColors = ["161b22", "0e4429", "006d32", "26a641", "39d353"];
-  let legend = `<text x="${legendX}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Less</text>`;
+  let legend = `<text x="${legendX}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">Less</text>`;
   legColors.forEach((c, i) => {
-    legend += `<rect x="${legendX + 32 + i * (baseCellSize + 2)}" y="${legendY - 9}" width="${baseCellSize - 1}" height="${baseCellSize - 1}" rx="2" fill="#${c}"/>`;
+    legend += `<rect x="${legendX + 36 + i * (baseCellSize + 3)}" y="${legendY - 10}" width="${baseCellSize - 2}" height="${baseCellSize - 2}" rx="3" fill="#${c}"/>`;
   });
-  legend += `<text x="${legendX + 32 + 5 * (baseCellSize + 2) + 6}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">More</text>`;
+  legend += `<text x="${legendX + 36 + 5 * (baseCellSize + 3) + 6}" y="${legendY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8b949e">More</text>`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
 <style>.t{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.b{font:500 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
 <rect width="${cardWidth}" height="${cardHeight}" fill="#0d1117" ${hba}/>
 <rect width="${cardWidth}" height="3" fill="#39d353" rx="8"/>
-<circle cx="${padX + 8}" cy="24" r="6" fill="#39d353" opacity=".15"/><circle cx="${padX + 8}" cy="24" r="3" fill="#39d353"/>
-<text x="${padX + 20}" y="28" class="t" fill="#${colors.title_color || 'e6edf3'}">${escapeXml(displayTitle)}</text>
-<rect x="${cardWidth - padX - 180}" y="12" width="180" height="22" rx="11" fill="#39d353" opacity=".12"/>
-<text x="${cardWidth - padX - 90}" y="27" text-anchor="middle" class="b" fill="#39d353">${totalContributions} contributions</text>
+<circle cx="${padX + 8}" cy="28" r="5" fill="#39d353" opacity=".2"/><circle cx="${padX + 8}" cy="28" r="2.5" fill="#39d353"/>
+<text x="${padX + 18}" y="32" class="t" fill="#${colors.title_color || 'e6edf3'}">Contributions</text>
+<rect x="${cardWidth - padX - 160}" y="14" width="160" height="22" rx="11" fill="#39d353" opacity=".12"/>
+<text x="${cardWidth - padX - 80}" y="29" text-anchor="middle" class="b" fill="#39d353">${totalContributions} contributions</text>
 <line x1="${padX}" y1="${headerHeight}" x2="${cardWidth - padX}" y2="${headerHeight}" stroke="#30363d" stroke-width=".5"/>
 ${monthLabels}${weekdayLabels}${cells}${legend}
 </svg>`;
@@ -175,25 +174,24 @@ ${monthLabels}${weekdayLabels}${cells}${legend}
  * Pulse graph card with monthly bars + 30-day trend line.
  */
 function generateContributionPulseSVG(options) {
-  const { username, days, totalContributions, hideBorder, title } = options;
+  const { days, totalContributions, hideBorder } = options;
 
   if (!days || days.length === 0) {
-    return noDataSVG(username, hideBorder);
+    return noDataSVG("", hideBorder);
   }
 
   const sortedDays = [...days].sort((a, b) => a.date.localeCompare(b.date));
   const cardWidth = 780;
-  const cardHeight = 250;
+  const cardHeight = 260;
   const padX = 24;
   const headerY = 30;
   const chartX = padX;
-  const chartY = 62;
+  const chartY = 68;
   const chartW = cardWidth - padX * 2;
   const barAreaH = 108;
-  const trendY = 190;
+  const trendY = 196;
   const trendH = 36;
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
-  const displayTitle = title || `${username}'s Contribution Pulse`;
 
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const monthMap = new Map();
@@ -240,7 +238,7 @@ function generateContributionPulseSVG(options) {
 <style>.t{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.m{font:500 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.n{font:700 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
 <rect width="${cardWidth}" height="${cardHeight}" fill="#0d1117" ${hba}/>
 <rect width="${cardWidth}" height="3" fill="#39d353" rx="8"/>
-<text x="${padX}" y="${headerY}" class="t" fill="#e6edf3">${escapeXml(displayTitle)}</text>
+<text x="${padX}" y="${headerY}" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="600" fill="#e6edf3">Contribution Pulse</text>
 <rect x="${cardWidth - 250}" y="14" width="226" height="24" rx="12" fill="#39d353" opacity=".12"/>
 <text x="${cardWidth - 137}" y="30" text-anchor="middle" class="m" fill="#39d353">${totalContributions} total commits</text>
 <line x1="${chartX}" y1="${chartY + barAreaH}" x2="${chartX + chartW}" y2="${chartY + barAreaH}" stroke="#30363d" stroke-width=".8"/>
@@ -257,7 +255,7 @@ ${trendDots}
  * Compact contribution summary card.
  */
 function generateContributionSummarySVG(options) {
-  const { username, totalContributions, currentStreak, longestStreak, colors, hideBorder } = options;
+  const { totalContributions, currentStreak, longestStreak, colors, hideBorder } = options;
   const W = 460, H = 170, P = 24;
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
 
@@ -265,12 +263,12 @@ function generateContributionSummarySVG(options) {
 <style>.t{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.n{font:700 30px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}.l{font:400 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
 <rect width="${W}" height="${H}" fill="#0d1117" ${hba}/>
 <rect width="${W}" height="3" fill="#39d353" rx="8"/>
-<circle cx="${P + 8}" cy="24" r="6" fill="#39d353" opacity=".15"/><circle cx="${P + 8}" cy="24" r="3" fill="#39d353"/>
-<text x="${P + 20}" y="28" class="t" fill="#e6edf3">${escapeXml(username)}'s Contributions</text>
-<line x1="${P}" y1="46" x2="${W - P}" y2="46" stroke="#30363d" stroke-width=".5"/>
-<g transform="translate(${P},56)"><rect width="115" height="80" rx="8" fill="#39d353" opacity=".06"/><text x="57" y="38" text-anchor="middle" class="n" fill="#39d353">${totalContributions}</text><text x="57" y="56" text-anchor="middle" class="l" fill="#8b949e">Total</text></g>
-<g transform="translate(${P + 127},56)"><rect width="115" height="80" rx="8" fill="#58a6ff" opacity=".06"/><text x="57" y="38" text-anchor="middle" class="n" fill="#58a6ff">${currentStreak}</text><text x="57" y="56" text-anchor="middle" class="l" fill="#8b949e">Current Streak</text></g>
-<g transform="translate(${P + 254},56)"><rect width="115" height="80" rx="8" fill="#e6edf3" opacity=".04"/><text x="57" y="38" text-anchor="middle" class="n" fill="#e6edf3">${longestStreak}</text><text x="57" y="56" text-anchor="middle" class="l" fill="#8b949e">Longest Streak</text></g>
+<circle cx="${P + 6}" cy="22" r="5" fill="#39d353" opacity=".2"/><circle cx="${P + 6}" cy="22" r="2.5" fill="#39d353"/>
+<text x="${P + 16}" y="26" class="t" fill="#e6edf3">Contributions</text>
+<line x1="${P}" y1="42" x2="${W - P}" y2="42" stroke="#30363d" stroke-width=".5"/>
+<g transform="translate(${P},52)"><rect width="130" height="80" rx="8" fill="#39d353" opacity=".06"/><text x="65" y="42" text-anchor="middle" class="n" fill="#39d353">${totalContributions}</text><text x="65" y="60" text-anchor="middle" class="l" fill="#8b949e">Total</text></g>
+<g transform="translate(${P + 142},52)"><rect width="130" height="80" rx="8" fill="#58a6ff" opacity=".06"/><text x="65" y="42" text-anchor="middle" class="n" fill="#58a6ff">${currentStreak}</text><text x="65" y="60" text-anchor="middle" class="l" fill="#8b949e">Current Streak</text></g>
+<g transform="translate(${P + 284},52)"><rect width="130" height="80" rx="8" fill="#e6edf3" opacity=".04"/><text x="65" y="42" text-anchor="middle" class="n" fill="#e6edf3">${longestStreak}</text><text x="65" y="60" text-anchor="middle" class="l" fill="#8b949e">Longest Streak</text></g>
 </svg>`;
 }
 
@@ -278,7 +276,7 @@ function noDataSVG(username, hideBorder) {
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="120" viewBox="0 0 460 120">
 <rect width="460" height="120" fill="#0d1117" ${hba}/>
-<text x="230" y="55" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="#e6edf3">${escapeXml(username)}'s Contributions</text>
+<text x="230" y="55" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="14" fill="#e6edf3">Contributions</text>
 <text x="230" y="78" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="11" fill="#8b949e">No data found</text>
 </svg>`;
 }

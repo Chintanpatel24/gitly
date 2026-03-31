@@ -205,6 +205,8 @@ module.exports = {
   fetchUserProfile,
   fetchContributionData,
   fetchUserLanguages,
+  fetchUserLanguagesByRepos,
+  fetchUserLanguagesByCommits,
 };
 
 /**
@@ -291,4 +293,118 @@ async function fetchUserLanguages(username) {
   languages = languages.filter(l => l.bytes > 0);
 
   return { languages, totalBytes };
+}
+
+/**
+ * Fetch languages by repo count (how many repos use each language).
+ */
+async function fetchUserLanguagesByRepos(username) {
+  let page = 1;
+  const langRepoCount = {};
+  let totalRepos = 0;
+
+  while (page <= 5) {
+    const url = `${GITHUB_API}/users/${username}/repos?per_page=100&page=${page}&type=owner&sort=updated`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": "gitly-app", Accept: "application/vnd.github.v3+json" },
+    });
+    if (!res.ok) break;
+    const repos = await res.json();
+    if (!repos.length) break;
+
+    for (const repo of repos) {
+      if (repo.fork || repo.size <= 0) continue;
+      const lang = repo.language;
+      if (lang) {
+        langRepoCount[lang] = (langRepoCount[lang] || 0) + 1;
+        totalRepos++;
+      }
+    }
+
+    if (repos.length < 100) break;
+    page++;
+  }
+
+  let languages = Object.entries(langRepoCount)
+    .map(([name, count]) => ({
+      name,
+      count,
+      percentage: totalRepos > 0 ? Math.round((count / totalRepos) * 10000) / 100 : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  const totalPct = languages.reduce((sum, l) => sum + l.percentage, 0);
+  if (languages.length > 0 && Math.abs(totalPct - 100) > 0.01) {
+    languages[languages.length - 1].percentage += (100 - totalPct);
+    languages[languages.length - 1].percentage = Math.round(languages[languages.length - 1].percentage * 100) / 100;
+  }
+
+  return { languages, totalRepos };
+}
+
+/**
+ * Fetch languages by commits (uses stargazers_count + size as activity proxy).
+ * Since GitHub API doesn't give commit counts per language without auth,
+ * we weight by repo size * (1 + stars) as a proxy for commit activity.
+ */
+async function fetchUserLanguagesByCommits(username) {
+  let page = 1;
+  const langActivity = {};
+  let totalActivity = 0;
+
+  while (page <= 5) {
+    const url = `${GITHUB_API}/users/${username}/repos?per_page=100&page=${page}&type=owner&sort=updated`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": "gitly-app", Accept: "application/vnd.github.v3+json" },
+    });
+    if (!res.ok) break;
+    const repos = await res.json();
+    if (!repos.length) break;
+
+    const promises = repos
+      .filter((r) => !r.fork && r.size > 0)
+      .slice(0, 30)
+      .map(async (repo) => {
+        try {
+          const langRes = await fetch(repo.languages_url, {
+            headers: { "User-Agent": "gitly-app", Accept: "application/vnd.github.v3+json" },
+          });
+          if (langRes.ok) {
+            const langs = await langRes.json();
+            const weight = 1 + (repo.stargazers_count || 0) * 0.1;
+            return { langs, weight };
+          }
+        } catch {}
+        return { langs: {}, weight: 1 };
+      });
+
+    const results = await Promise.all(promises);
+
+    for (const { langs, weight } of results) {
+      for (const [lang, bytes] of Object.entries(langs)) {
+        const activity = bytes * weight;
+        langActivity[lang] = (langActivity[lang] || 0) + activity;
+        totalActivity += activity;
+      }
+    }
+
+    if (repos.length < 100) break;
+    page++;
+  }
+
+  let languages = Object.entries(langActivity)
+    .map(([name, activity]) => ({
+      name,
+      activity: Math.round(activity),
+      percentage: totalActivity > 0 ? Math.round((activity / totalActivity) * 10000) / 100 : 0,
+    }))
+    .sort((a, b) => b.activity - a.activity);
+
+  const totalPct = languages.reduce((sum, l) => sum + l.percentage, 0);
+  if (languages.length > 0 && Math.abs(totalPct - 100) > 0.01) {
+    languages[languages.length - 1].percentage += (100 - totalPct);
+    languages[languages.length - 1].percentage = Math.round(languages[languages.length - 1].percentage * 100) / 100;
+  }
+
+  return { languages, totalActivity };
 }
