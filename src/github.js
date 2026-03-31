@@ -198,6 +198,75 @@ function parseContributionHTML(html) {
   };
 }
 
+/**
+ * Fetch all commits by a user with timestamps to calculate actual working time.
+ * Formula: TWt = Σ (Ti+1 - Ti) for all i where (Ti+1 - Ti) < 5 hours
+ * Where TWt = Total Working Time, Ti = Timestamp of commit i
+ */
+async function fetchUserCommitTimestamps(username) {
+  const perPage = 100;
+  let page = 1;
+  let allCommits = [];
+
+  while (page <= 10) { // Limit to ~1000 most recent commits
+    const url = `${GITHUB_API}/search/commits?q=author:${username}&per_page=${perPage}&page=${page}&sort=author-date`;
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "gitly-app",
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+
+    if (!res.ok) {
+      console.warn(`GitHub API warning: ${res.status} on page ${page}`);
+      break;
+    }
+
+    const data = await res.json();
+    const commits = data.items || [];
+    
+    if (commits.length === 0) break;
+
+    // Extract commit timestamps
+    for (const commit of commits) {
+      if (commit.commit && commit.commit.author && commit.commit.author.date) {
+        allCommits.push({
+          timestamp: new Date(commit.commit.author.date).getTime(),
+          date: commit.commit.author.date,
+        });
+      }
+    }
+
+    if (commits.length < perPage) break;
+    page++;
+  }
+
+  if (allCommits.length === 0) {
+    return { totalWorkingHours: 0, commitCount: 0 };
+  }
+
+  // Sort commits by timestamp ascending
+  allCommits.sort((a, b) => a.timestamp - b.timestamp);
+
+  // Calculate working time: sum all gaps < 5 hours (18000000 ms)
+  const MAX_GAP = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+  let totalWorkingMs = 0;
+
+  for (let i = 0; i < allCommits.length - 1; i++) {
+    const gap = allCommits[i + 1].timestamp - allCommits[i].timestamp;
+    if (gap > 0 && gap < MAX_GAP) {
+      totalWorkingMs += gap;
+    }
+  }
+
+  const totalWorkingHours = Math.round((totalWorkingMs / (1000 * 60 * 60)) * 100) / 100;
+
+  return {
+    totalWorkingHours,
+    commitCount: allCommits.length,
+  };
+}
+
 module.exports = {
   fetchUserPullRequests,
   fetchOpenPullRequests,
@@ -207,6 +276,7 @@ module.exports = {
   fetchUserLanguages,
   fetchUserLanguagesByRepos,
   fetchUserLanguagesByCommits,
+  fetchUserCommitTimestamps,
 };
 
 /**

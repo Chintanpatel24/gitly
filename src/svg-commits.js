@@ -23,11 +23,11 @@ function generateCommitsRankingSVG(options) {
   const titleColor = (colors && colors.title_color) || "e6edf3";
 
   const maxCount = activeDays[0].count;
-  const boxSize = 24;
-  const gap = 4;
+  const boxSize = 32;
+  const gap = 6;
   const pad = 24;
   const hdr = 60;
-  const cols = 12;
+  const cols = 10;
   const rows = Math.ceil(activeDays.length / cols);
   const gridWidth = cols * (boxSize + gap);
   const gridHeight = rows * (boxSize + gap);
@@ -46,7 +46,7 @@ function generateCommitsRankingSVG(options) {
     const x = pad + col * (boxSize + gap);
     const y = hdr + row * (boxSize + gap);
     const opacity = Math.max(0.15, Math.min(1, (day.count / maxCount) * 0.95));
-    boxes += `<rect x="${x}" y="${y}" width="${boxSize}" height="${boxSize}" rx="4" fill="#${accentColor}" opacity="${opacity}" data-date="${day.date}" data-count="${day.count}"><title>${formatDate(day.date)}: ${day.count} commits</title></rect>`;
+    boxes += `<g><rect x="${x}" y="${y}" width="${boxSize}" height="${boxSize}" rx="6" fill="#${accentColor}" opacity="${opacity}"/><rect x="${x}" y="${y}" width="${boxSize}" height="${boxSize}" rx="6" fill="none" stroke="#e6edf3" stroke-width="0.8" opacity="0.12"/><title>${formatDate(day.date)}: ${day.count} commits</title></g>`;
   });
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.max(cardWidth, pad * 2 + gridWidth)}" height="${cardHeight}" viewBox="0 0 ${Math.max(cardWidth, pad * 2 + gridWidth)} ${cardHeight}">

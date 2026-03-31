@@ -123,11 +123,18 @@ PR count with per-repository breakdown and progress bars.
 
 ### 7. Working Hours
 
-Estimated total coding hours based on GitHub activity since account creation.
+Calculates actual coding hours by analyzing commit timestamp gaps.
 
 <img src="https://gitlyy.vercel.app/api/working-hours?username=torvalds&hide_border=true" alt="Working Hours"/>
 
-Calculation: `Total Contributions x 1.5 hours/commit`
+**Formula:** `TWt = Σ (Ti+1 - Ti) for all i where (Ti+1 - Ti) < 5 hours`
+
+Where:
+- `TWt` = Total Working Time
+- `Σ` = Sum of all
+- `Ti` = Timestamp of commit i
+- `Ti+1` = Timestamp of next commit
+- **Threshold:** Only counts gaps < 5 hours (assumes longer gaps are breaks/sleep)
 
 ```html
 <img src="https://gitlyy.vercel.app/api/working-hours?username=YOUR_USERNAME&hide_border=true"/>

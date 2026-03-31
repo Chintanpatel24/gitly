@@ -2,11 +2,12 @@
  * Working Hours Card
  * GET /api/working-hours?username=xxx
  *
- * Calculates estimated total coding hours based on GitHub activity.
+ * Calculates actual working time by analyzing commit timestamp gaps.
+ * Formula: TWt = Σ (Ti+1 - Ti) for all i where (Ti+1 - Ti) < 5 hours
  * Refreshes every 2 hours.
  */
 
-const { fetchUserProfile, fetchContributionData } = require("../src/github");
+const { fetchUserCommitTimestamps } = require("../src/github");
 const { getTheme, applyColorOverrides } = require("../src/themes");
 const { generateWorkingHoursSVG } = require("../src/svg-working-hours");
 const { getCache, setCache, clearCache } = require("../src/cache");
@@ -38,28 +39,12 @@ module.exports = async (req, res) => {
 
     if (!cachedData) {
       try {
-        // Fetch user profile for created_at date
-        const userProfile = await fetchUserProfile(username);
-        const createdAt = new Date(userProfile.created_at);
-
-        // Fetch contribution data
-        const contributionData = await fetchContributionData(username);
-        const { days, totalContributions } = contributionData;
-
-        // Calculate active days
-        const activeDays = days.filter((d) => d.count > 0).length;
-
-        // Estimate working hours:
-        // Average: ~1.5 hours per commit
-        // This accounts for: thinking, coding, testing, debugging, reviewing
-        const avgHoursPerCommit = 1.5;
-        const totalHours = Math.max(0, totalContributions * avgHoursPerCommit);
+        // Fetch commit timestamps to calculate actual working time
+        const commitData = await fetchUserCommitTimestamps(username);
 
         cachedData = {
-          totalHours,
-          totalContributions,
-          activeDays,
-          createdAt,
+          totalHours: commitData.totalWorkingHours,
+          commitCount: commitData.commitCount,
           lastUpdated: new Date(),
         };
 
@@ -77,9 +62,7 @@ module.exports = async (req, res) => {
     const svg = generateWorkingHoursSVG({
       username,
       totalHours: cachedData.totalHours,
-      joinedDate: cachedData.createdAt,
-      activeContributions: cachedData.totalContributions,
-      activeDays: cachedData.activeDays,
+      commitCount: cachedData.commitCount,
       colors,
       hideBorder: hide_border === "true",
     });

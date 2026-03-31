@@ -1,11 +1,13 @@
 /**
  * Working Hours Card SVG generation
+ * Formula: TWt = Σ (Ti+1 - Ti) for all i where (Ti+1 - Ti) < 5 hours
+ * Where TWt = Total Working Time, Ti = Timestamp of commit i
  */
 
 function generateWorkingHoursSVG(options) {
   const {
     totalHours = 0,
-    joinedDate = new Date(),
+    commitCount = 0,
     colors,
     hideBorder,
     cardWidth = 460,
@@ -17,23 +19,17 @@ function generateWorkingHoursSVG(options) {
   const accentColor = (colors && colors.accent_color) || "58a6ff";
 
   const formattedHours = Math.round(totalHours).toLocaleString();
+  const formattedCommits = commitCount.toLocaleString();
 
-  const joinedTime = new Date(joinedDate);
-  const now = new Date();
-
-  const joinedDateStr = joinedTime.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-  const nowDateStr = now.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-
-  const maxTime = 25 * 365 * 24 * 60 * 60 * 1000;
-  const elapsedTime = now - joinedTime;
-  const progressPercent = Math.min(100, (elapsedTime / maxTime) * 100);
+  // Calculate hours per commit for context
+  const hoursPerCommit = commitCount > 0 ? (totalHours / commitCount).toFixed(2) : 0;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${cardWidth}" height="${cardHeight}" viewBox="0 0 ${cardWidth} ${cardHeight}">
   <style>
     .header{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-    .hours{font:700 52px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .hours{font:700 48px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
     .text-unit{font:500 12px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
-    .date{font:400 9px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+    .stat{font:400 11px -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
   </style>
 
   <rect width="${cardWidth}" height="${cardHeight}" fill="#0d1117" ${hba}/>
@@ -45,18 +41,15 @@ function generateWorkingHoursSVG(options) {
     <text x="24" y="16" class="header" fill="#${accentColor}">Coding Hours</text>
   </g>
 
-  <text x="${cardWidth / 2}" y="95" text-anchor="middle" class="hours" fill="#${accentColor}">${formattedHours}</text>
-  <text x="${cardWidth / 2}" y="110" text-anchor="middle" class="text-unit" fill="#8b949e">hours</text>
+  <text x="${cardWidth / 2}" y="85" text-anchor="middle" class="hours" fill="#${accentColor}">${formattedHours}</text>
+  <text x="${cardWidth / 2}" y="105" text-anchor="middle" class="text-unit" fill="#8b949e">hours</text>
 
-  <rect x="${P}" y="125" width="${cardWidth - P * 2}" height="3" rx="2" fill="#30363d"/>
-  <rect x="${P}" y="125" width="${(cardWidth - P * 2) * progressPercent / 100}" height="3" rx="2" fill="#${accentColor}"/>
-  <circle cx="${P}" cy="126.5" r="2.5" fill="#${accentColor}" opacity=".6"/>
-  <circle cx="${cardWidth - P}" cy="126.5" r="2.5" fill="#${accentColor}"/>
+  <line x1="${P}" y1="115" x2="${cardWidth - P}" y2="115" stroke="#30363d" stroke-width=".5"/>
 
-  <line x1="${P}" y1="138" x2="${cardWidth - P}" y2="138" stroke="#30363d" stroke-width=".5"/>
-
-  <text x="${P}" y="${cardHeight - 2}" class="date" fill="#8b949e">${joinedDateStr}</text>
-  <text x="${cardWidth - P}" y="${cardHeight - 2}" text-anchor="end" class="date" fill="#8b949e">${nowDateStr}</text>
+  <g transform="translate(${P},125)">
+    <text x="0" y="12" class="stat" fill="#8b949e">Commits: <tspan fill="#e6edf3" font-weight="600">${formattedCommits}</tspan></text>
+    <text x="0" y="28" class="stat" fill="#8b949e">Avg per commit: <tspan fill="#e6edf3" font-weight="600">${hoursPerCommit}h</tspan></text>
+  </g>
 </svg>`;
 }
 
