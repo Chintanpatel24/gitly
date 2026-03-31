@@ -1,7 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/languages/repos", "destination": "/api/languages-repos" },
-    { "source": "/api/languages/commits", "destination": "/api/languages-commits" }
+    { "source": "/api/languages/repos", "destination": "/api/languages?mode=repos" },
+    { "source": "/api/languages/commits", "destination": "/api/languages?mode=commits" }
   ]
 }

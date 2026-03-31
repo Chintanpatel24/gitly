@@ -5,12 +5,18 @@
  * Auto-refreshes every 30 minutes.
  */
 
-const { fetchUserLanguages } = require("../src/github");
+const {
+  fetchUserLanguages,
+  fetchUserLanguagesByRepos,
+  fetchUserLanguagesByCommits,
+} = require("../src/github");
 const { getTheme, applyColorOverrides } = require("../src/themes");
 const {
   generateLanguageSVG,
   generateLanguageCompactSVG,
   generateLanguageDonutSVG,
+  generateLanguageDonutByReposSVG,
+  generateLanguageDonutByCommitsSVG,
 } = require("../src/svg-language");
 const { getCache, setCache, clearCache } = require("../src/cache");
 
@@ -22,7 +28,19 @@ module.exports = async (req, res) => {
   res.setHeader("Content-Type", "image/svg+xml");
   res.setHeader("Cache-Control", "public, max-age=1800, s-maxage=1800, stale-while-revalidate=600");
 
-  const { username, theme, hide_border, layout, max_langs, bg_color, title_color, text_color, border_color, refresh } = req.query;
+  const {
+    username,
+    theme,
+    hide_border,
+    layout,
+    max_langs,
+    bg_color,
+    title_color,
+    text_color,
+    border_color,
+    refresh,
+    mode,
+  } = req.query;
 
   if (!username) {
     res.status(400).send(errorSVG("Missing username"));
@@ -30,7 +48,8 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const cacheKey = `langs:${username.toLowerCase()}`;
+    const cacheMode = mode === "repos" || mode === "commits" ? mode : "default";
+    const cacheKey = `langs:${cacheMode}:${username.toLowerCase()}`;
 
     // Force refresh if requested
     if (refresh === "true") {
@@ -41,7 +60,13 @@ module.exports = async (req, res) => {
 
     if (!langData) {
       try {
-        langData = await fetchUserLanguages(username);
+        if (cacheMode === "repos") {
+          langData = await fetchUserLanguagesByRepos(username);
+        } else if (cacheMode === "commits") {
+          langData = await fetchUserLanguagesByCommits(username);
+        } else {
+          langData = await fetchUserLanguages(username);
+        }
         setCache(cacheKey, langData, CACHE_TTL);
       } catch (fetchErr) {
         console.error("Language fetch error:", fetchErr.message);
@@ -53,21 +78,34 @@ module.exports = async (req, res) => {
     let colors = getTheme(theme);
     colors = applyColorOverrides(colors, { bg_color, title_color, text_color, border_color });
 
-    const svg = layout === "compact"
-      ? generateLanguageCompactSVG({
-          username, languages: langData.languages, colors,
-          hideBorder: hide_border === "true",
-        })
-      : layout === "donut"
-        ? generateLanguageDonutSVG({
+    let svg;
+    if (cacheMode === "repos") {
+      svg = generateLanguageDonutByReposSVG({
+        languages: langData.languages,
+        hideBorder: hide_border === "true",
+      });
+    } else if (cacheMode === "commits") {
+      svg = generateLanguageDonutByCommitsSVG({
+        languages: langData.languages,
+        hideBorder: hide_border === "true",
+      });
+    } else {
+      svg = layout === "compact"
+        ? generateLanguageCompactSVG({
             username, languages: langData.languages, colors,
             hideBorder: hide_border === "true",
           })
-        : generateLanguageSVG({
-            username, languages: langData.languages, totalBytes: langData.totalBytes, colors,
-            hideBorder: hide_border === "true",
-            maxLangs: parseInt(max_langs) || 12,
-          });
+        : layout === "donut"
+          ? generateLanguageDonutSVG({
+              username, languages: langData.languages, colors,
+              hideBorder: hide_border === "true",
+            })
+          : generateLanguageSVG({
+              username, languages: langData.languages, totalBytes: langData.totalBytes, colors,
+              hideBorder: hide_border === "true",
+              maxLangs: parseInt(max_langs) || 12,
+            });
+    }
 
     res.status(200).send(svg);
   } catch (error) {
