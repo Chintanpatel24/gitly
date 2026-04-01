@@ -19,12 +19,18 @@ function generatePRCardSVG(options) {
     const y = hdr + i * rowH;
     const name = repo.length > 38 ? repo.substring(0, 35) + "..." : repo;
     const pct = Math.min((count / repos[0][1]) * 100, 100);
+    const countLabel = String(count);
+    const valueW = Math.max(24, countLabel.length * 9 + 6);
+    const barW = 60;
+    const barToValueGap = 12;
+    const barX = cardWidth - pad - valueW - barToValueGap - barW;
+    const valueX = cardWidth - pad;
     rows += `<g transform="translate(0,${y})">
       <rect width="${cardWidth}" height="${rowH}" fill="#e6edf3" opacity="${i % 2 === 0 ? '.02' : '0'}"/>
       <text x="${pad}" y="20" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="12" fill="#c9d1d9">${escapeXml(name)}</text>
-      <rect x="${cardWidth - pad - 90}" y="9" width="60" height="12" rx="6" fill="#30363d"/>
-      <rect x="${cardWidth - pad - 90}" y="9" width="${pct * 0.6}" height="12" rx="6" fill="#${colors.accent_color}" opacity=".5"/>
-      <text x="${cardWidth - pad - 20}" y="20" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#${colors.accent_color}">${count}</text>
+      <rect x="${barX}" y="9" width="${barW}" height="12" rx="6" fill="#30363d"/>
+      <rect x="${barX}" y="9" width="${pct * 0.6}" height="12" rx="6" fill="#${colors.accent_color}" opacity=".5"/>
+      <text x="${valueX}" y="20" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#${colors.accent_color}">${countLabel}</text>
     </g>`;
   });
 

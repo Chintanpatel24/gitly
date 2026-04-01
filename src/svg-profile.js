@@ -18,9 +18,10 @@ function generateProfileSVG(options) {
     following = 0,
     colors,
     hideBorder,
+    cardWidth = 460,
   } = options;
 
-  const W = 460, H = 200, P = 24;
+  const W = Math.max(420, cardWidth), H = 200, P = 24;
   const hba = hideBorder ? `rx="8"` : `rx="8" stroke="#30363d" stroke-width="1"`;
 
   const accentColor = (colors && colors.accent_color) || "58a6ff";
@@ -34,6 +35,11 @@ function generateProfileSVG(options) {
   const joinStr = joinDate ? joinDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Unknown";
   const now = new Date();
   const yearsActive = joinDate ? ((now - joinDate) / (365.25 * 24 * 60 * 60 * 1000)).toFixed(1) : "0";
+  const statGap = 12;
+  const statW = Math.floor((W - P * 2 - statGap * 2) / 3);
+  const statY = 104;
+  const secondX = P + statW + statGap;
+  const thirdX = secondX + statW + statGap;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
@@ -57,20 +63,20 @@ function generateProfileSVG(options) {
 
   <line x1="${P}" y1="96" x2="${W - P}" y2="96" stroke="#30363d" stroke-width=".5"/>
 
-  <g transform="translate(${P},104)">
-    <rect width="128" height="50" rx="8" fill="#1f6feb" opacity=".06"/>
-    <text x="64" y="26" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#1f6feb">${publicRepos}</text>
-    <text x="64" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Repositories</text>
+  <g transform="translate(${P},${statY})">
+    <rect width="${statW}" height="50" rx="8" fill="#1f6feb" opacity=".06"/>
+    <text x="${statW / 2}" y="26" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#1f6feb">${publicRepos}</text>
+    <text x="${statW / 2}" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Repositories</text>
   </g>
-  <g transform="translate(${P + 140},104)">
-    <rect width="128" height="50" rx="8" fill="#${accentColor}" opacity=".06"/>
-    <text x="64" y="26" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#${accentColor}">${followers}</text>
-    <text x="64" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Followers</text>
+  <g transform="translate(${secondX},${statY})">
+    <rect width="${statW}" height="50" rx="8" fill="#${accentColor}" opacity=".06"/>
+    <text x="${statW / 2}" y="26" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#${accentColor}">${followers}</text>
+    <text x="${statW / 2}" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Followers</text>
   </g>
-  <g transform="translate(${P + 280},104)">
-    <rect width="128" height="50" rx="8" fill="#8b5cf6" opacity=".06"/>
-    <text x="64" y="26" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#8b5cf6">${following}</text>
-    <text x="64" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Following</text>
+  <g transform="translate(${thirdX},${statY})">
+    <rect width="${statW}" height="50" rx="8" fill="#8b5cf6" opacity=".06"/>
+    <text x="${statW / 2}" y="26" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#8b5cf6">${following}</text>
+    <text x="${statW / 2}" y="42" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="10" fill="#8b949e">Following</text>
   </g>
 
   <line x1="${P}" y1="${H - 26}" x2="${W - P}" y2="${H - 26}" stroke="#30363d" stroke-width=".5"/>

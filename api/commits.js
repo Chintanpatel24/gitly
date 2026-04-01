@@ -12,6 +12,7 @@ const {
   generateCommitsRankingSVG,
   generateCommitsCompactSVG,
 } = require("../src/svg-commits");
+const { parseCardWidth } = require("../src/width");
 const { getCache, setCache, clearCache } = require("../src/cache");
 
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
@@ -62,7 +63,7 @@ module.exports = async (req, res) => {
       : generateCommitsRankingSVG({
           username, days, totalContributions, colors,
           hideBorder: hide_border === "true", title,
-          cardWidth: parseInt(width, 10) || 460,
+          cardWidth: parseCardWidth(width, 460, 400, 1200),
         });
 
     res.status(200).send(svg);
